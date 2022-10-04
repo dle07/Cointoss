@@ -3,3 +3,4 @@ fastapi
 beautifulsoup4
 pandas
 praw    
+yfinance

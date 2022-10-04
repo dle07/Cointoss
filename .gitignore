@@ -1,3 +1,3 @@
 config/*
-data/sentiment/*
+data/**
 test.py
