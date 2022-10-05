@@ -15,6 +15,8 @@ class ConfigUtils():
     REDDIT_CLIENT_ID = valuesYaml["reddit"]['client_id']
     REDDIT_CLIENT_SECRET = valuesYaml['reddit']['secret']
 
+    NEWSAPI_KEY = valuesYaml["newsapi"]["api_key"]
+
 
 
 
