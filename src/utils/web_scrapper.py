@@ -1,8 +1,5 @@
 import csv
 import re
-import sys
-import time
-import urllib.request
 from datetime import datetime, timedelta
 from pathlib import Path
 from pprint import pprint
@@ -27,7 +24,7 @@ def scrapeData(ticker) -> Path:
     file_path = create_csv_path("sentiment")
     twitter_data = queryByTickerTwitter(ticker)
     reddit_data = queryByTickerReddit(ticker)
-    news_data = queryByTickerNews(ticker)
+    news_data = queryByTickerNewsAPI(ticker)
 
     with open(file_path ,mode = 'a', newline='', encoding='utf-8') as csvFile:
         writer = csv.writer(csvFile, delimiter=',')
@@ -36,8 +33,6 @@ def scrapeData(ticker) -> Path:
         writer.writerows(reddit_data)
     return Path(file_path)
         
-
-
 
 def queryByTickerTwitter(ticker:str):
     client = tweepy.Client(bearer_token = TWITTER_BEARER_TOKEN)
@@ -48,9 +43,6 @@ def queryByTickerTwitter(ticker:str):
             row = [tweet.text, str(tweet.created_at)]
             rows.append(row)
     return rows
-
-
-
 
 
 def queryByTickerReddit(ticker:str, limit = 1000):
@@ -66,7 +58,7 @@ def queryByTickerReddit(ticker:str, limit = 1000):
 
 
 #Article dict keys : ['source', 'author', 'title', 'description', 'url', 'urlToImage', 'publishedAt', 'content']
-def queryByTickerNews(ticker:str, days_back = 3):
+def queryByTickerNewsAPI(ticker:str, days_back = 3):
     
     rows = []
     from_date = (datetime.today() - timedelta(days=3)).strftime("%Y-%m-%d")
@@ -83,7 +75,15 @@ def queryByTickerNews(ticker:str, days_back = 3):
         rows.append([article["content"], article["publishedAt"]])
     return rows
                     
-            
+def queryByTickerGoogle(ticker:str, days_back:int = 3):
+    search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
+    links = []
+    res = requests.get(url = search_url)
+    soup = BeautifulSoup(res.content, 'html.parser')
+    for a in soup.find_all('a', href=True):
+        print (a['href'])
+
+
 
 
 
