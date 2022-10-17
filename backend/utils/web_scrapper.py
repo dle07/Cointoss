@@ -9,7 +9,7 @@ import praw
 import requests
 import tweepy
 from bs4 import BeautifulSoup
-from src.utils.ConfigUtils import ConfigUtils
+from backend.utils.ConfigUtils import ConfigUtils
 from src.utils.storage_utils import create_csv_path
 from newspaper import Article
 from itertools import repeat

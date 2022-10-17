@@ -1,5 +1,5 @@
 import yaml
-from src.utils.storage_utils import *
+from backend.utils.storage_utils import *
 
 
 class ConfigUtils():
