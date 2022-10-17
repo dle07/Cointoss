@@ -3,13 +3,16 @@ import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from pprint import pprint
-
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import as_completed, wait
 import praw
 import requests
 import tweepy
 from bs4 import BeautifulSoup
 from src.utils.ConfigUtils import ConfigUtils
 from src.utils.storage_utils import create_csv_path
+from newspaper import Article
+from itertools import repeat
 
 TWITTER_API_KEY = ConfigUtils.TWITTER_API_KEY
 TWITTER_API_KEY_SECRET = ConfigUtils.TWITTER_API_KEY_SECRET
@@ -22,15 +25,20 @@ NEWS_API_KEY = ConfigUtils.NEWSAPI_KEY
 
 def scrapeData(ticker) -> Path:
     file_path = create_csv_path("sentiment")
-    twitter_data = queryByTickerTwitter(ticker)
-    reddit_data = queryByTickerReddit(ticker)
-    news_data = queryByTickerNewsAPI(ticker)
+
 
     with open(file_path ,mode = 'a', newline='', encoding='utf-8') as csvFile:
         writer = csv.writer(csvFile, delimiter=',')
-        writer.writerow(["text,created_at"])
-        writer.writerows(twitter_data)
-        writer.writerows(reddit_data)
+        writer.writerow(["text,created_at,source"])
+        with ThreadPoolExecutor(10) as executor:
+            futures = [
+                executor.submit(queryByTickerTwitter, ticker),
+                executor.submit(queryByTickerReddit,ticker),
+                executor.submit(queryByTickerGoogle, ticker)
+            ]            
+            for future in as_completed(futures):
+                if( future.result() != None):
+                    writer.writerows(future.result())
     return Path(file_path)
         
 
@@ -42,6 +50,7 @@ def queryByTickerTwitter(ticker:str):
         if( re.search('\$VOO', tweet.text) != None):
             row = [tweet.text, str(tweet.created_at)]
             rows.append(row)
+    print(len(rows))
     return rows
 
 
@@ -54,12 +63,12 @@ def queryByTickerReddit(ticker:str, limit = 1000):
         created = datetime.fromtimestamp(post.created_utc)
         if (now - created).days <=3 :  # Check to see if post is within 3 days
             rows.append([post.selftext, str(created)])
+    print(len(rows))
     return rows
 
 
 #Article dict keys : ['source', 'author', 'title', 'description', 'url', 'urlToImage', 'publishedAt', 'content']
 def queryByTickerNewsAPI(ticker:str, days_back = 3):
-    
     rows = []
     from_date = (datetime.today() - timedelta(days=3)).strftime("%Y-%m-%d")
     url = ('https://newsapi.org/v2/everything?'
@@ -75,15 +84,32 @@ def queryByTickerNewsAPI(ticker:str, days_back = 3):
         rows.append([article["content"], article["publishedAt"]])
     return rows
                     
-def queryByTickerGoogle(ticker:str, days_back:int = 3):
-    search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
+def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
+    rows = []
     links = []
+    search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
     res = requests.get(url = search_url)
     soup = BeautifulSoup(res.content, 'html.parser')
-    for a in soup.find_all('a', href=True):
-        print (a['href'])
 
+    for a in soup.find_all('a', href=True, limit = limit):
+        href = a['href']
+        if( href.startswith("./articles") ):
+            links.append("http://news.google.com" + href[1:])
 
+    with ThreadPoolExecutor(max_workers=100) as executor:
+        executor.map(scrape_news_article, links, repeat(rows))   
+    print(len(rows))
+    return rows        
+
+def scrape_news_article(url,rows):
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
+        rows.append([article.text,article.publish_date])
+    except Exception as e :
+        print(str(e))
+        return 
 
 
 

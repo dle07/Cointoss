@@ -16,7 +16,6 @@ def get_project_root() -> str:
 
 def create_csv_path(suffix:str) -> str:
     file_name = get_project_root()+ '\\data\\{suffix}_'.format(suffix=suffix) + datetime.today().strftime('%Y.%m.%d-%H.%M.%S') +".csv"
-    print(file_name)
     return file_name
     
 
