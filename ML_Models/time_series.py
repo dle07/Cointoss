@@ -1,0 +1,42 @@
+import datetime
+import numpy as np
+import pandas as pd
+import yfinance as yf
+from fastapi import FastAPI, Response
+from tensorflow.keras.models import load_model
+from sklearn.preprocessing import MinMaxScaler
+from datetime import date
+
+mlApp = FastAPI()
+#Load models
+time_series_model = load_model("QQQ_Model.h5")
+
+@mlApp.get("/ml/time-series")
+def time_series_test(tickerSymbol):
+    #set sequence length to thee lengththe model was trained with
+    sequence_length = 50
+    df = yf.download(tickerSymbol)
+    FEATURES = ['High', 'Low', 'Open', 'Close', 'Volume', 'Adj Close']
+    df_filtered = df.filter(FEATURES)
+    np_data_unscaled = np.array(df_filtered)
+    
+    #Scaler for x values
+    scaler = MinMaxScaler()
+    scaler.fit(np_data_unscaled)
+    
+    #scaler for prediction
+    scaler_pred = MinMaxScaler()
+    df_close = pd.DataFrame(df_filtered['Close'])
+    scaler_pred.fit(df_close)
+    
+    df_temp = df_filtered[-sequence_length:].values
+    df_temp_scaled = scaler.transform(df_temp)
+    
+    x_pred = []
+    x_pred.append(df_temp_scaled)
+    
+    pred_price_scaled = time_series_model.predict(np.array(x_pred))
+    pred_price_unscaled = scaler_pred.inverse_transform(pred_price_scaled.reshape(-1, 1))
+    
+    predicted_price = np.round(pred_price_unscaled.ravel()[0], 2)
+    return {"prediction": predicted_price.item()}
