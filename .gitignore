@@ -2,3 +2,4 @@ config/*
 data/**
 test.py
 venv
+.vs/
