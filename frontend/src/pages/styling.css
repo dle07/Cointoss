@@ -1,0 +1,141 @@
+/*About Us Page*/
+.header {
+    margin: 30px;
+}
+
+.logo {
+    color: #D1E300;
+    text-decoration: none;
+    font-weight: bolder;
+    font-size: 31px;
+    margin-left: 10px;
+    float: left;
+}
+
+.about {
+    text-align: center;
+    margin-right: 130px;
+    color: white;
+}
+
+.questions {
+    color: #F04242;
+    text-align: center;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.text {
+    color:white;
+    font-size: 18px;
+    margin: 20px 120px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+.prediction {
+    color:white;
+    text-decoration: underline;
+    display: flex;
+}
+.texts {
+    color:white;
+    font-size: 18px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.container-mg {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 10px 90px;
+}
+
+footer {
+    background-color: #404040;
+    padding-bottom: 30px;;
+}
+
+/*Landing Page*/
+.nav-header {
+    margin: 30px;
+    display: flex;
+}
+
+.link {
+    color:white;
+    margin-left: 30px;
+    margin-top: 10px;
+    font-size: 18px;
+    display:flex;
+}
+
+.adj-search {
+    margin-left: 100px;
+    position: relative;
+}
+
+.link-sign {
+    color: white;
+    text-decoration: none;
+    float: right;
+    margin-left: 30px;
+    font-size: 18px;
+    display: flex;
+}
+
+.move-right {
+    margin-left: 400px;
+    margin-top: 10px;
+    display: flex;
+}
+
+/*Login Page*/
+.login-signup {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 150px;
+}
+
+.cover {
+    background-color: #D9D9D9;
+    align-items: center;
+    justify-content: space-around;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    height: 500px;
+}
+
+.btn {
+    width: 80%;
+    height: 40px;
+    background-color: #315DCC;
+    border-radius: 10px;
+    border-color: #315DCC;
+    color: white;
+    font-size: 20px;
+}
+
+button:hover {
+    background-color: blue;
+}
+
+.usr-pass {
+    width: 80%;
+    height: 40px;
+    border-radius: 5px;
+    border-color: black;
+    padding-left: 10px;
+}
