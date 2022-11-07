@@ -4,10 +4,10 @@
 }
 
 .logo {
-    color: #D1E300;
+    color: #C0C0C0;
     text-decoration: none;
     font-weight: bolder;
-    font-size: 31px;
+    font-size: 40px;
     margin-left: 10px;
     float: left;
 }
@@ -73,8 +73,8 @@ footer {
 
 .link {
     color:white;
-    margin-left: 30px;
-    margin-top: 10px;
+    margin-left: 13px;
+    margin-top: 20px;
     font-size: 18px;
     display:flex;
 }
@@ -138,4 +138,12 @@ button:hover {
     border-radius: 5px;
     border-color: black;
     padding-left: 10px;
+}
+
+/*StockPrice.js*/
+.search-track {
+    margin: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

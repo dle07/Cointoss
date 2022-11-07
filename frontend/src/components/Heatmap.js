@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import HeatMap from 'react-heatmap-grid'
-import Tracker from './Tracker'
 import { useNavigate } from "react-router-dom"
 
-const xLabels = new Array(2).fill(0).map((_, i) => `${''}`);
-const tick = ['AAPL', 'MSFT', 'IBM', 'GOOG', 'AMZN', 'TSLA'];
+const xLabels = new Array(7).fill(0).map((_, i) => `${''}`);
+const tick = ['AAPL', 'MSFT', 'IBM', 'GOOG', 'AMZN', 'TSLA', 'BRK-B', 'UNH', 'XOM', 'JNJ', 'V', 'JPM', 'WMT', 'NVDA', 'CVX', 'LLY', 'TSM', 'PG', 'MA', 'BAC', 'HD'];
 
 const yLabels = ["", "", ""];
 
 //create data array filled with 0
 let data = new Array(yLabels.length)
+    .fill(0)
+    .map(() =>
+        new Array(xLabels.length).fill(0));
+        
+let dataPosition = new Array(yLabels.length)
     .fill(0)
     .map(() =>
         new Array(xLabels.length).fill(0));
@@ -32,37 +36,44 @@ function Heatmap() {
     for (let j = 0; j < data.length; ++j) {
         for (let k = 0; k < data[j].length; ++k) {
             //Only works if there is more than one ticker symbol in the tick array as it is dependent on the format of the data being returned
-            data[j][k] = tick[tickCounter] + '\n' +rawData[`('Close', '${tick[tickCounter]}')`];
+            data[j][k] = tick[tickCounter] + '\n' + rawData[`('Close', '${tick[tickCounter]}')`];
             ++tickCounter;
         }
     }
 
+    //stores tickers in 2d array format
+    let tickCount = 0;
+    for (let j = 0; j < data.length; ++j) {
+      for (let k = 0; k < data[j].length; ++k) {
+          dataPosition[j][k] = tick[tickCount];
+          ++tickCount;
+      }
+    }
     const navigate = useNavigate();
 
-    const stockSymbol = document.querySelectorAll('div .ticker_position');
-    const [chosenSymbol, setChosenSymbol] = useState("");
-    stockSymbol.forEach(ticker => ticker.addEventListener("click", function () {
-        setChosenSymbol(JSON.stringify(ticker.innerText));
-    }));
-    //console.log(chosenSymbol)
     return (
-        <HeatMap
-            xLabels={xLabels}
-            yLabels={yLabels}
-            xLabelsLocation={"bottom"}
-            xLabelsVisibility={false}
-            xLabelWidth={50}
-            data={data}
-            squares
-            onClick={() => navigate(`/StockPrice/${tick[0]}`)}
-            cellStyle={(background, value, min, max, data, x, y) => ({
-                background: `rgba(00, 255, 00)`,
-                fontSize: "11px"
-            })}
-            cellRender={(value) => value}
-            title={(value, unit) => `${value}`}
-            height={100}
-        />
+        <>
+            <div style={{ marginRight: "100px", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <HeatMap
+                    xLabels={xLabels}
+                    yLabels={yLabels}
+                    xLabelsLocation={"bottom"}
+                    xLabelsVisibility={false}
+                    xLabelWidth={50}
+                    data={data}
+                    squares
+                    onClick={(x, y) => navigate(`/StockPrice/${dataPosition[y][x]}`)}
+                    cellStyle={(background, value, min, max, data, x, y, color, fontWeight) => ({ 
+                        background: `rgba(00, 255, 00, ${Math.floor(Math.random() * 100) / 100})`,
+                        fontSize: "15px",
+                        fontWeight: "bold"
+                    })}
+                    cellRender={(value) => value}
+                    title={(value, unit) => `${value}`}
+                    height={170}
+                />
+            </div>
+        </>
     )
 }
 

@@ -1,6 +1,5 @@
 import React from 'react'
 import {SearchBar} from '../components/SearchBar'
-import Tracker from '../components/Tracker'
 import Heatmap from '../components/Heatmap'
 import './styling.css'
 

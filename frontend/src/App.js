@@ -7,6 +7,7 @@ import Portfolio from './pages/portfolio'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp';
 import StockPrice from './pages/StockPrice';
+import HistoricalData from './pages/HistoricalData';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/Login' element={<Login/>} />
         <Route path='/SignUp' element={<SignUp/>} />
         <Route path='/StockPrice/:ticker' exact element={<StockPrice />} />
+        <Route path='/HistoricalData/:ticker' element={<HistoricalData />} />
     </Routes>
     </Router>
   );

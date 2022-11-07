@@ -1,20 +1,21 @@
 import React, {useState} from 'react'
 import './SearchBar.css'
 import Symbols from './symbols.json'
-//import Tracker from './Tracker'
+import { useNavigate } from "react-router-dom"
 
 function HandleClick() {
+    const navigate = useNavigate();
     const stockSymbol = document.querySelectorAll('div .eachResults');
-    const [chosenSymbol, setChosenSymbol] = useState("");
     stockSymbol.forEach(ticker => ticker.addEventListener("click", function() {
-        setChosenSymbol(JSON.stringify(ticker.innerText));
+        window.location.reload(); //refresh the page every time you search for a new ticker
+        navigate(`/StockPrice/${ticker.innerText}`)
     }));
-    console.log("after: " + chosenSymbol)
-    return chosenSymbol;
+    return '';
 }
 
 export function SearchBar() {
     const [newSymbol, setNewSymbol] = useState([]);
+    
     return (
         <div className="search">
             <div className="input">

@@ -14,16 +14,23 @@ function HandleClick() {
     return chosenSymbol;
 }*/
 
-function Tracker(ticker) {
+export function MoreInfo(ticker) {
+    const [info, setInfo] = useState([]);
+
+   const fetchData = async () => {
+        axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setInfo(res.data))
+    };
+    useEffect(()=> {
+        fetchData();
+    }, []);
+
+    return (info[info.length - 1]?.Open.toFixed(2));
+}
+
+export function Tracker(ticker) {
     const [data, setData] = useState([]);
     const x_coord = [];
     const y_coord = [];
-
-    const stockSymbol = document.querySelectorAll('div .eachResults');
-    const [chosenSymbol, setChosenSymbol] = useState("");
-    stockSymbol.forEach(ticker => ticker.addEventListener("click", function() {
-        setChosenSymbol(ticker.innerText);
-    }));
 
    const fetchData = async () => {
         axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setData(res.data))
@@ -48,13 +55,19 @@ function Tracker(ticker) {
 
     return (
         <>
-            <p className="ticker_position">{data[data.length - 1]?.Close.toFixed(2)}</p>
-            
+            <Plot data={[
+                {
+                    x: x_coord,
+                    y: y_coord,
+                    type: 'scatter',
+                    mode: 'lines+markers', 
+                    marker: {color: 'red'},
+                }]}
+                layout={ {width: "50%", height: "auto", title: ticker.name + ' ' + data[data.length - 1]?.Close.toFixed(2)} }
+            />
         </>
     )
 }
-
-export default Tracker
 
 /*
 <Plot data={[
