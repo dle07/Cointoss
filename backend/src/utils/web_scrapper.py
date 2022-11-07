@@ -9,10 +9,12 @@ import praw
 import requests
 import tweepy
 from bs4 import BeautifulSoup
-from backend.utils.ConfigUtils import ConfigUtils
-from src.utils.storage_utils import create_csv_path
+from backend.src.utils.ConfigUtils import ConfigUtils
+
 from newspaper import Article
 from itertools import repeat
+
+from backend.src.utils.storage_utils import create_csv_path
 
 TWITTER_API_KEY = ConfigUtils.TWITTER_API_KEY
 TWITTER_API_KEY_SECRET = ConfigUtils.TWITTER_API_KEY_SECRET
