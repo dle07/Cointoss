@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.486bd871.css",
+    "main.js": "/static/js/main.1f7fd16b.js",
+    "static/js/787.22edae46.chunk.js": "/static/js/787.22edae46.chunk.js",
+    "static/media/timeSeriesImg.jpg": "/static/media/timeSeriesImg.02a4a9d463335cdcecea.jpg",
+    "static/media/exampleGraph.jpg": "/static/media/exampleGraph.26c86bbd7a6603099786.jpg",
+    "static/media/sentiment_analysis.jpg": "/static/media/sentiment_analysis.22cedb73259be504a148.jpg",
+    "index.html": "/index.html",
+    "main.486bd871.css.map": "/static/css/main.486bd871.css.map",
+    "main.1f7fd16b.js.map": "/static/js/main.1f7fd16b.js.map",
+    "787.22edae46.chunk.js.map": "/static/js/787.22edae46.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.486bd871.css",
+    "static/js/main.1f7fd16b.js"
+  ]
+}
