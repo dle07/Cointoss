@@ -1,6 +1,7 @@
 from base64 import b64decode
 import datetime
 from pprint import pprint
+from fastapi import HTTPException
 import bcrypt
 import jwt
 from jwt.exceptions import InvalidTokenError
@@ -36,9 +37,10 @@ def encode_auth_token(user_email) -> str:
 #@jwt_exception_handler
 def getUserEmailFromJwt(jwt_token:str):
     if(jwt_token == None):
-        raise ValueError("Did not Provide Bearer JWT Token")
+        raise HTTPException(status_code=401,detail="Did not Provide Bearer JWT Token")
     if( jwt_token.startswith("Bearer ") == False):
-        raise ValueError("Bearer token value does not begin with 'Bearer '")
+        raise HTTPException(status_code=401, detail="Bearer token value does not begin with 'Bearer '")
+        
     jwt_token = jwt_token[7:]
     dict = jwt.decode(jwt_token, ConfigUtils.jwt_secret, algorithms=['HS256'] )
     email = dict["sub"]

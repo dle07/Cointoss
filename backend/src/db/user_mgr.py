@@ -4,6 +4,7 @@ from pprint import pprint
 from backend.src.db.db_util import getCursor
 from backend.src.routers.models import UserRegistration   
 
+### USER MANAGER API FUNCTIONS
 def registerUser(userRegistration: UserRegistration):
 
     try:
@@ -22,31 +23,6 @@ def registerUser(userRegistration: UserRegistration):
         pprint(e)
         return e
 
-def addStock(email:str, ticker:str):
-    print(email)
-    user = getUserByEmail(email)
-    user_id = user[0]
-    print(user_id)
-    with getCursor() as cur:   # Stock already tacked by user
-        cur.execute("SELECT * FROM user_stock_assets WHERE user_id = %s and ticker = %s ", (user_id, ticker))
-        if( cur.fetchone() != None ):  # We found a value
-            return
-    with getCursor() as cur:
-        cur.execute("insert into user_stock_assets values( DEFAULT,%s,%s)", (user_id, ticker))
-
-def retrieveTrackedStocks(email):
-    id = getUserIdByEmail(email)
-    query = "select * from user_stock_assets where user_id = %s"
-
-    try:
-        with getCursor() as cur:
-            cur.execute(query, (id,))
-            stocks = cur.fetchall()
-            pprint(stocks)
-            pprint(type(stocks))
-            return stocks
-    except:
-        pass
 def getUserByEmail(email):
     try:
         query = "select * from users where email = %s LIMIT 1"
@@ -65,12 +41,44 @@ def getUserIdByEmail(email:str) -> int:
 
 
 
+def addStock(email:str, ticker:str):
+    print(email)
+    user = getUserByEmail(email)
+    user_id = user[0]
+    print(user_id)
+    with getCursor() as cur:   # Stock already tacked by user
+        cur.execute("SELECT * FROM user_stock_assets WHERE user_id = %s and ticker = %s ", (user_id, ticker))
+        if( cur.fetchone() != None ):  # We found a value
+            return
+    with getCursor() as cur:
+        cur.execute("insert into user_stock_assets values( DEFAULT,%s,%s)", (user_id, ticker))
+
+def deleteStock(email:str,ticker:str):
+
+    id = getUserIdByEmail(email)
+    query = "delete from user_stock_assets where user_id = %s and ticker = %s"
+    try:
+        with getCursor() as cur:
+            cur.execute(query,(id,ticker))
+    except Exception as e:
+        print(e)
+
+def retrieveTrackedStocks(email):
+    id = getUserIdByEmail(email)
+    query = "select ticker from user_stock_assets where user_id = %s"
+    try:
+        with getCursor() as cur:
+            cur.execute(query, (id,))
+            stocks = cur.fetchall()
+            return [x[0] for x in stocks]
+    except Exception as e:
+        print(e)
+
+### UTILITY FUNCTIONS
 def emailTaken(email):
     with getCursor() as cur:
         cur.execute("SELECT user_id from users where email = %s",(email,))
         return  True if cur.fetchone() is not None else False
-
-
 
 
     
