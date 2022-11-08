@@ -33,16 +33,19 @@ def encode_auth_token(user_email) -> str:
     except Exception as e:
         return e
 
-@jwt_exception_handler
+#@jwt_exception_handler
 def getUserEmailFromJwt(jwt_token:str):
     if(jwt_token == None):
         raise ValueError("Did not Provide Bearer JWT Token")
     if( jwt_token.startswith("Bearer ") == False):
         raise ValueError("Bearer token value does not begin with 'Bearer '")
     jwt_token = jwt_token[7:]
-
     dict = jwt.decode(jwt_token, ConfigUtils.jwt_secret, algorithms=['HS256'] )
-    return dict['sub']
+    email = dict["sub"]
+    print(type(dict["sub"]))
+    print(email)
+    return email
+
 
 
 

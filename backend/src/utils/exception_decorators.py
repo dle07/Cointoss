@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 
-
+# Messes with return value
 def jwt_exception_handler(func):
     def inner_func(*args, **kwargs):
         try:
