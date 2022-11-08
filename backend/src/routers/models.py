@@ -17,5 +17,4 @@ class UserLogin(BaseModel):
 
 class UserStockAsset(BaseModel):
     ticker:str
-    quantity:str
 
