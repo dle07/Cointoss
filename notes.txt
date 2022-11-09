@@ -1,2 +1,6 @@
 --- 60.427520513534546 seconds ---  w/o threading
 https://github.com/dle07/cointoss
+
+git clone git@github.com:<your_git_user_name>/<repo_name>.git .
+
+git clone git@github.com:dle07/cointoss.git git 
