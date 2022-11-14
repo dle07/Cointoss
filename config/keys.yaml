@@ -21,6 +21,8 @@ db:  # AWS RDS database
   host: cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com
   port: 5432
 
+  #psql -h cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com -p 5432 -d cointoss -U postgres 
+  #GtPbxOqdLh4AhZeFH90i
 
   # database: cointoss
   # user_name: cointoss

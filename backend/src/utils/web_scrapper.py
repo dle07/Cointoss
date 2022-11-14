@@ -25,9 +25,9 @@ REDDIT_CLIENT_SECRET = ConfigUtils.REDDIT_CLIENT_SECRET
 
 NEWS_API_KEY = ConfigUtils.NEWSAPI_KEY
 
-def scrapeData(ticker) -> Path:
-    file_path = create_csv_path("sentiment")
+def scrapeData(ticker:str, days_back:int = 3) -> Path:
 
+    file_path = create_csv_path("sentiment")
 
     with open(file_path ,mode = 'a', newline='', encoding='utf-8') as csvFile:
         writer = csv.writer(csvFile, delimiter=',')
@@ -35,8 +35,8 @@ def scrapeData(ticker) -> Path:
         with ThreadPoolExecutor(10) as executor:
             futures = [
                 executor.submit(queryByTickerTwitter, ticker),
-                executor.submit(queryByTickerReddit,ticker),
-                executor.submit(queryByTickerGoogle, ticker)
+                executor.submit(queryByTickerReddit, ticker, days_back = 3),
+                executor.submit(queryByTickerGoogle, ticker, days_back = 3)
             ]            
             for future in as_completed(futures):
                 if( future.result() != None):
@@ -44,29 +44,61 @@ def scrapeData(ticker) -> Path:
     return Path(file_path)
         
 
-def queryByTickerTwitter(ticker:str):
+def queryByTickerTwitter(ticker:str, days_back = 3):
     client = tweepy.Client(bearer_token = TWITTER_BEARER_TOKEN)
     query = ticker.upper().lstrip('$') + " lang:en -is:retweet"
     rows = []
-    for tweet in tweepy.Paginator(client.search_recent_tweets, query=query,tweet_fields=['created_at'], max_results=100).flatten(limit=1000):
+    for tweet in tweepy.Paginator(client.search_recent_tweets, query=query,tweet_fields=['created_at'], max_results=100,start_time = None).flatten(limit=1000):
         if( re.search('\$VOO', tweet.text) != None):
-            row = [tweet.text, str(tweet.created_at)]
+            row = [tweet.text, str(tweet.created_at), "twitter"]
             rows.append(row)
     print(len(rows))
     return rows
 
 
-def queryByTickerReddit(ticker:str, limit = 1000):
+def queryByTickerReddit(ticker:str, limit = 1000, days_back = 3):
     # subreddits to query from: /r/stocks /r/wallstreetbets /r/investing /r/StockMarket
     now = datetime.now()
     reddit = praw.Reddit( client_id=REDDIT_CLIENT_ID, client_secret=REDDIT_CLIENT_SECRET, user_agent="cointossgang")
     rows = []
     for post in reddit.subreddit("stocks+wallstreetbets+investing+StockMarket").search(query = ticker, time_filter="week",limit = limit ,sort = "relevance"):
         created = datetime.fromtimestamp(post.created_utc)
-        if (now - created).days <=3 :  # Check to see if post is within 3 days
-            rows.append([post.selftext, str(created)])
+        if (now - created).days <= days_back :  # Check to see if post is within 3 days
+            rows.append([post.selftext, str(created),"reddit"])
     print(len(rows))
     return rows
+
+
+
+                    
+def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
+    rows = []
+    links = []
+    search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
+    res = requests.get(url = search_url)
+    soup = BeautifulSoup(res.content, 'html.parser')
+
+    for a in soup.find_all('a', href=True, limit = limit):
+        href = a['href']
+        if( href.startswith("./articles") ):
+            links.append("http://news.google.com" + href[1:])
+
+    with ThreadPoolExecutor(max_workers=100) as executor:
+        executor.map(scrape_news_article, links, repeat(rows))   
+
+    return rows        
+
+def scrape_news_article(url,rows):
+    try:
+        article = Article(url)
+        article.download()
+        article.parse()
+        rows.append([article.text,article.publish_date, url])
+    except Exception as e :
+        print(str(e))
+        return 
+
+
 
 
 #Article dict keys : ['source', 'author', 'title', 'description', 'url', 'urlToImage', 'publishedAt', 'content']
@@ -85,35 +117,3 @@ def queryByTickerNewsAPI(ticker:str, days_back = 3):
     for article in articles:
         rows.append([article["content"], article["publishedAt"]])
     return rows
-                    
-def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
-    rows = []
-    links = []
-    search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
-    res = requests.get(url = search_url)
-    soup = BeautifulSoup(res.content, 'html.parser')
-
-    for a in soup.find_all('a', href=True, limit = limit):
-        href = a['href']
-        if( href.startswith("./articles") ):
-            links.append("http://news.google.com" + href[1:])
-
-    with ThreadPoolExecutor(max_workers=100) as executor:
-        executor.map(scrape_news_article, links, repeat(rows))   
-    print(len(rows))
-    return rows        
-
-def scrape_news_article(url,rows):
-    try:
-        article = Article(url)
-        article.download()
-        article.parse()
-        rows.append([article.text,article.publish_date])
-    except Exception as e :
-        print(str(e))
-        return 
-
-
-
-
-    
