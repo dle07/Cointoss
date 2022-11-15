@@ -5,3 +5,4 @@ sql/
 .vs/
 webserver_key.pem
 notes.txt
+**/.DS_Store
