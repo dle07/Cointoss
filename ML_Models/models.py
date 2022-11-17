@@ -32,7 +32,7 @@ padded_sequence = pad_sequences(encoded_docs, maxlen=200)
 """
 
 @router.get("/ml/time-series")
-def time_series_test(tickerSymbol):
+async def time_series_test(tickerSymbol):
     #set sequence length to thee lengththe model was trained with
     sequence_length = 50
     df = yf.download(tickerSymbol)
@@ -63,8 +63,8 @@ def time_series_test(tickerSymbol):
 
 
 @router.get("/ml/sentiment")
-def sentiment_test(ticker, days_back=3):
-    scrapped_data_path = web_scrapper.scrapeData(ticker, days_back)
+async def sentiment_test(ticker, days_back=3):
+    scrapped_data_path = web_scrapper.scrapeData(ticker, days_back) #need to figure out a way to only call this only once for a certain time period.
     scraped_data = pd.read_csv(scrapped_data_path)
     scraped_data_text = scraped_data.dropna(subset=["text"])["text"].reset_index(drop = True)
 
