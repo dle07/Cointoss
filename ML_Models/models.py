@@ -13,7 +13,7 @@ from backend.src.utils import web_scrapper
 
 router = APIRouter()
 #Load models
-time_series_model = load_model("ML_Models/QQQ_Model.h5")
+time_series_model = load_model("ML_Models/SP500_Model.h5")
 sentiment_model = load_model("ML_Models/SAM.h5")
 
 #Prepare Tokenizer for sentiment model
@@ -58,8 +58,15 @@ async def time_series_test(tickerSymbol):
     pred_price_scaled = time_series_model.predict(np.array(x_pred))
     pred_price_unscaled = scaler_pred.inverse_transform(pred_price_scaled.reshape(-1, 1))
 
-    predicted_price = np.round(pred_price_unscaled.ravel()[0], 2)
-    return {"prediction": predicted_price.item()}
+    pred_price_dict ={
+        "day1": pred_price_unscaled.ravel()[0].item(),
+        "day2": pred_price_unscaled.ravel()[1].item(),
+        "day3": pred_price_unscaled.ravel()[2].item(),
+        "day4": pred_price_unscaled.ravel()[3].item(),
+        "day5": pred_price_unscaled.ravel()[4].item(),
+    }
+
+    return pred_price_dict
 
 
 @router.get("/ml/sentiment")
