@@ -1,5 +1,4 @@
---- 60.427520513534546 seconds ---  w/o threading
-https://github.com/dle07/cointoss
+
 
 git clone git@github.com:<your_git_user_name>/<repo_name>.git .
 
@@ -8,6 +7,8 @@ git clone git@github.com:dle07/cointoss.git git
 psql -h cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com -p 5432 -d cointoss -U postgres 
 
 
-As mentioned the news article scraper is a combination of a web
- crawler and parser. The web crawler has a depth of 1, where a
- list of hrefs are retrieved through google news endpoint shown here. 
+
+
+top 21 tickers by trade volume scraper list
+
+curl -X "GET"  http://127.0.0.1:5000/highest-volume?limit=15 

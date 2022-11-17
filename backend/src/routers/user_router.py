@@ -18,7 +18,7 @@ router = APIRouter()
 
 
 @router.post("/user/register")
-def register(userRegistration: UserRegistration):
+async def register(userRegistration: UserRegistration):
     pprint(type(userRegistration))
     try:
         registerUser(userRegistration)
@@ -27,7 +27,7 @@ def register(userRegistration: UserRegistration):
 
 
 @router.post("/user/login")
-def login(userLogin: UserLogin):
+async def login(userLogin: UserLogin):
     result:tuple(3) = getUserByEmail(userLogin.user_email)
 
     if(result == None):
