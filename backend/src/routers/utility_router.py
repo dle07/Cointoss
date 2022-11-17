@@ -33,7 +33,3 @@ async def  get_highest_volume_tickers(limit:int = 21):
 		if(limit == 0):
 			break
 	return JSONResponse(content={"tickers":lst})
-	
-		
-		
-	
