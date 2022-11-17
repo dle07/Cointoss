@@ -15,19 +15,19 @@ newsapi:
 jwt_secret: Di63RBePO4nUnXp2FNMP2Cz9mPgyo7gSTOh5kVgmHr7rM65k6mfpWzGikS7mmBE
 
 db:  # AWS RDS database
-  database: cointoss
-  user_name: postgres
-  password: GtPbxOqdLh4AhZeFH90i
-  host: cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com
-  port: 5432
+  # database: cointoss
+  # user_name: postgres
+  # password: GtPbxOqdLh4AhZeFH90i
+  # host: cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com
+  # port: 5432
 
   #psql -h cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com -p 5432 -d cointoss -U postgres 
   #GtPbxOqdLh4AhZeFH90i
 
-  # database: cointoss
-  # user_name: cointoss
-  # password: password123
-  # host: localhost
-  # port: 5432
+  database: cointoss
+  user_name: cointoss
+  password: password123
+  host: localhost
+  port: 5432
 
   

@@ -13,20 +13,19 @@ router = APIRouter()
 
 
 @router.post("/portfolio/add")
-def add_portfolio_asset(asset: UserStockAsset, jwt_token: str = Header(default = None, description= "JWT Auth Token")):
+async def add_portfolio_asset(asset: UserStockAsset, jwt_token: str = Header(default = None, description= "JWT Auth Token")):
     # Extract user id from token
     email = getUserEmailFromJwt(jwt_token)
     addStock(email, asset.ticker )
 
 @router.delete("/portfolio/delete")
-def delete_portfolio_asset(asset: UserStockAsset, jwt_token: str = Header(default = None, description= "JWT Auth Token")):
+async def delete_portfolio_asset(asset: UserStockAsset, jwt_token: str = Header(default = None, description= "JWT Auth Token")):
     email = getUserEmailFromJwt(jwt_token)
     deleteStock(email, asset.ticker )
+    
 
-
-    pass
 @router.get("/portfolio/retrieve")
-def get_portfolio(jwt_token: str = Header(default = None, description= "JWT Auth Token")):
+async def get_portfolio(jwt_token: str = Header(default = None, description= "JWT Auth Token")):
 
     email = getUserEmailFromJwt(jwt_token)
     content = jsonable_encoder({           # Encode to json
