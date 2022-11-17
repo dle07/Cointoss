@@ -82,6 +82,4 @@ def sentiment_test(ticker, days_back=3):
 
     headlines_sentiment['sentiment'] = headlines_sentiment['sentiment'].apply(parse_predictions)
 
-    print(headlines_sentiment)
-
     return headlines_sentiment.to_dict(orient='records')
