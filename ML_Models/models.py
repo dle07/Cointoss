@@ -64,16 +64,24 @@ def time_series_test(tickerSymbol):
 
 @router.get("/ml/sentiment")
 def sentiment_test(ticker, days_back=3):
-    #scrapped_data_path = web_scrapper.scrapeData(ticker, days_back)
-    scraped_data = pd.read_csv("data/sentiment_2022.11.16-21.44.37.csv")
-    scraped_data_text = scraped_data["text"]
+    scrapped_data_path = web_scrapper.scrapeData(ticker, days_back)
+    scraped_data = pd.read_csv(scrapped_data_path)
+    scraped_data_text = scraped_data.dropna(subset=["text"])["text"].reset_index(drop = True)
 
-    print(scraped_data_text)
+    print(scraped_data_text.shape)
 
     tw = tokenizer.texts_to_sequences(scraped_data_text)
     tw = pad_sequences(tw,maxlen=200)
-    prediction = sentiment_model.predict(tw)
+    predictions = sentiment_model.predict(tw).round()
 
-    print(tw)
+    headlines_sentiment = pd.concat([scraped_data_text, pd.DataFrame(predictions, columns=['sentiment'])], axis = 1)
 
-    return 1#{"sentiment_prediction": sentiment_label[1][prediction]}
+    def parse_predictions(prediction):
+        sentiment = sentiment_label[1][prediction]
+        return sentiment
+
+    headlines_sentiment['sentiment'] = headlines_sentiment['sentiment'].apply(parse_predictions)
+
+    print(headlines_sentiment)
+
+    return headlines_sentiment.to_dict(orient='records')

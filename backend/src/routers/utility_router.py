@@ -12,8 +12,3 @@ def get_stock_data(tickerSymbol, timePeriod=None): # valid periods: 1d,5d,1mo,3m
 	#changing date column from index to regualar column
 	data.reset_index(inplace=True)
 	return Response(data.to_json(orient="records"), media_type="application/json") #formats into json format before returning
-
-@router.get("/ml/test")
-def test(tickerSymbol, daysBack=3):
-	test_dir = web_scrapper.scrapeData(tickerSymbol, daysBack)
-	return test_dir
