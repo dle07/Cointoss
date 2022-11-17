@@ -2,7 +2,7 @@ import datetime
 import numpy as np
 import pandas as pd
 import yfinance as yf
-from fastapi import FastAPI, Response
+from fastapi import APIRouter, Response
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 from datetime import date
@@ -11,15 +11,27 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 from backend.src.utils import web_scrapper
 
-
-mlApp = FastAPI()
+router = APIRouter()
 #Load models
-time_series_model = load_model("QQQ_Model.h5")
+time_series_model = load_model("ML_Models/QQQ_Model.h5")
+sentiment_model = load_model("ML_Models/SAM.h5")
 
-sentiment_model = load_model("SAM.h5")
+#Prepare Tokenizer for sentiment model
+df = pd.read_csv("ML_Models/stock_sentiment_data.csv")
+tweet_df = df[['Tweet_Text','Sentiment']]
+tweet_df = tweet_df[tweet_df['Sentiment'] != 'Neutral']
+sentiment_label = tweet_df.Sentiment.factorize()
 
+tweet = tweet_df.Tweet_Text.values
+tokenizer = Tokenizer(num_words=5000)
+tokenizer.fit_on_texts(tweet)
+""""
+vocab_size = len(tokenizer.word_index) + 1
+encoded_docs = tokenizer.texts_to_sequences(tweet)
+padded_sequence = pad_sequences(encoded_docs, maxlen=200)
+"""
 
-@mlApp.get("/ml/time-series")
+@router.get("/ml/time-series")
 def time_series_test(tickerSymbol):
     #set sequence length to thee lengththe model was trained with
     sequence_length = 50
@@ -50,25 +62,18 @@ def time_series_test(tickerSymbol):
     return {"prediction": predicted_price.item()}
 
 
-@mlApp.get("/ml/sentiment")
+@router.get("/ml/sentiment")
 def sentiment_test(ticker, days_back=3):
+    #scrapped_data_path = web_scrapper.scrapeData(ticker, days_back)
+    scraped_data = pd.read_csv("data/sentiment_2022.11.16-21.44.37.csv")
+    scraped_data_text = scraped_data["text"]
 
-    df = pd.read_csv("stock_sentiment_data.csv")
-    tweet_df = df[['Tweet_Text','Sentiment']]
-    tweet_df = tweet_df[tweet_df['Sentiment'] != 'Neutral']
-    sentiment_label = tweet_df.Sentiment.factorize()
+    print(scraped_data_text)
 
-    tweet = tweet_df.Tweet_Text.values
-    tokenizer = Tokenizer(num_words=5000)
-    tokenizer.fit_on_texts(tweet)
-    vocab_size = len(tokenizer.word_index) + 1
-    encoded_docs = tokenizer.texts_to_sequences(tweet)
-    padded_sequence = pad_sequences(encoded_docs, maxlen=200)
-
-    scrapped_data_path = scrapeData(ticker, days_back)
-    scraped_data = pd.read_csv(scrapped_data_path)
-
-    tw = tokenizer.texts_to_sequences(scraped_data)
+    tw = tokenizer.texts_to_sequences(scraped_data_text)
     tw = pad_sequences(tw,maxlen=200)
-    prediction = int(sentiment_model.predict(tw).round().item())
-    return {"sentiment_prediction": sentiment_label[1][prediction]}
+    prediction = sentiment_model.predict(tw)
+
+    print(tw)
+
+    return 1#{"sentiment_prediction": sentiment_label[1][prediction]}
