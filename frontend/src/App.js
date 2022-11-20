@@ -12,7 +12,7 @@ import HistoricalData from './pages/HistoricalData';
 function App() {
   return (
     <Router>
-    <Routes>
+      <Routes>
         <Route exact path='/' element={<Landing />} />
         <Route path='/about_us' element={<About/>} />
         <Route path='/portfolio' element={<Portfolio/>} />
@@ -20,7 +20,7 @@ function App() {
         <Route path='/SignUp' element={<SignUp/>} />
         <Route path='/StockPrice/:ticker' exact element={<StockPrice />} />
         <Route path='/HistoricalData/:ticker' element={<HistoricalData />} />
-    </Routes>
+      </Routes>
     </Router>
   );
 }

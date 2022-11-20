@@ -16,6 +16,12 @@ function HandleClick() {
 
 export function MoreInfo(ticker) {
     const [info, setInfo] = useState([]);
+    const dates = [];
+    const open_price = [];
+    const high_price = [];
+    const low_price = [];
+    const close_price = [];
+    const volume = [];
 
    const fetchData = async () => {
         axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setInfo(res.data))
@@ -24,7 +30,52 @@ export function MoreInfo(ticker) {
         fetchData();
     }, []);
 
-    return (info[info.length - 1]?.Open.toFixed(2));
+    //pushes the last 100 days worth on data into array
+    for(let i = info.length - 1; i >= info.length - 100; i--) {
+        dates.push(info[i]?.Date);
+        open_price.push(info[i]?.Open);
+        high_price.push(info[i]?.High);
+        low_price.push(info[i]?.Low);
+        close_price.push(info[i]?.Close);
+        volume.push(info[i]?.Volume);
+    }
+    // converts epoch time to date(YY-MM-DD)
+    for(let i = 0; i < dates.length; i++) {
+        let newDate = new Date(dates[i]);
+        let year = newDate.getFullYear();
+        let month = newDate.getMonth() + 1;
+        let day = newDate.getDate();
+        dates[i] = year + '-' + month + '-' + day;
+    }
+
+    return (
+        <table>
+            <thead>
+                <tr>
+                    <th scope='col'>Date</th>
+                    <th scope='col'>Open</th>
+                    <th scope='col'>High</th>
+                    <th scope='col'>Low</th>
+                    <th scope='col'>Close</th>
+                    <th scope='col'>Volume</th>
+                </tr>
+            </thead>
+            <tbody>
+                {dates.map((index, i) => {
+                    return(
+                        <tr>
+                            <td>{dates[i]}</td>
+                            <td>{open_price[i]}</td>
+                            <td>{high_price[i]}</td>
+                            <td>{low_price[i]}</td>
+                            <td>{close_price[i]}</td>
+                            <td>{volume[i]}</td>
+                        </tr>
+                    );
+                })}
+            </tbody>
+        </table>
+    );
 }
 
 export function Tracker(ticker) {
