@@ -1,6 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 
+function validEmail() {
+  
+}
+
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

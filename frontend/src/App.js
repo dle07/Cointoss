@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import SignUp from './pages/SignUp';
 import StockPrice from './pages/StockPrice';
 import HistoricalData from './pages/HistoricalData';
+import AccessRoutes from './AccessRoutes';
 
 function App() {
   return (
@@ -15,7 +16,9 @@ function App() {
       <Routes>
         <Route exact path='/' element={<Landing />} />
         <Route path='/about_us' element={<About/>} />
-        <Route path='/portfolio' element={<Portfolio/>} />
+        <Route element={<AccessRoutes />} >
+          <Route path='/portfolio' element={<Portfolio/>} />
+        </Route>
         <Route path='/Login' element={<Login/>} />
         <Route path='/SignUp' element={<SignUp/>} />
         <Route path='/StockPrice/:ticker' exact element={<StockPrice />} />
