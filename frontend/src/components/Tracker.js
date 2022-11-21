@@ -16,6 +16,7 @@ function HandleClick() {
 
 export function MoreInfo(ticker) {
     const [info, setInfo] = useState([]);
+    const [modelPredictions, setModelPredictions] = useState([]);
     const dates = [];
     const open_price = [];
     const high_price = [];
@@ -29,6 +30,9 @@ export function MoreInfo(ticker) {
     useEffect(()=> {
         fetchData();
     }, []);
+    //const fetchData = async () => {
+    //    axios.get()
+    //};
 
     //pushes the last 100 days worth on data into array
     for(let i = info.length - 1; i >= info.length - 100; i--) {
