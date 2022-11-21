@@ -1,7 +1,6 @@
 data/**
 test.py
 venv
-sql/
 .vs/
 webserver_key.pem
 notes.txt
