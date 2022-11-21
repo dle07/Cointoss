@@ -16,7 +16,6 @@ function HandleClick() {
 
 export function MoreInfo(ticker) {
     const [info, setInfo] = useState([]);
-    const [modelPredictions, setModelPredictions] = useState([]);
     const dates = [];
     const open_price = [];
     const high_price = [];
@@ -25,14 +24,11 @@ export function MoreInfo(ticker) {
     const volume = [];
 
    const fetchData = async () => {
-        axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setInfo(res.data))
+       axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setInfo(res.data))
     };
     useEffect(()=> {
         fetchData();
     }, []);
-    //const fetchData = async () => {
-    //    axios.get()
-    //};
 
     //pushes the last 100 days worth on data into array
     for(let i = info.length - 1; i >= info.length - 100; i--) {
@@ -84,15 +80,19 @@ export function MoreInfo(ticker) {
 
 export function Tracker(ticker) {
     const [data, setData] = useState([]);
+    const [modelPredictions, setModelPredictions] = useState([]);
     const x_coord = [];
     const y_coord = [];
 
    const fetchData = async () => {
-        axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setData(res.data))
+       axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setData(res.data));
+       axios.get(`/ml/time-series?tickerSymbol=${ticker.name}`).then(res => setModelPredictions(res.data));
     };
     useEffect(()=> {
         fetchData();
     }, []);
+
+    console.log(modelPredictions);
 
     //pushes the last 100 days worth on data into array
     for(let i = data.length - 1; i >= data.length - 100; i--) {
