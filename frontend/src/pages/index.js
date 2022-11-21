@@ -2,8 +2,12 @@ import React from 'react'
 import {SearchBar} from '../components/SearchBar'
 import Heatmap from '../components/Heatmap'
 import './styling.css'
+import {useCookies} from 'react-cookie';
+import LogOut from '../components/LogOut';
 
 function Landing() {
+    const [cookies] = useCookies(['jwt']);
+    console.log("landing", cookies.jwt);
     return (
         <>
             <div className="header">
@@ -15,8 +19,12 @@ function Landing() {
                         <SearchBar />
                     </div>
                     <div className='move-right'>
-                    <a href='/SignUp' className='link-sign'>Sign Up</a>
-                    <a href='/Login' className='link-sign'>Login</a>
+                        {cookies.jwt !== "" && <LogOut />}
+                        {cookies.jwt === "" && 
+                        <>
+                            <a href='/SignUp' className='link-sign'>Sign Up</a>
+                            <a href='/Login' className='link-sign'>Login</a>
+                        </>}
                     </div>
                 </div>
             </div>

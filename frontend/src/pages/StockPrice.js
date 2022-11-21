@@ -1,8 +1,10 @@
-import React from 'react'
+import React from 'react';
 import { useLocation } from "react-router-dom"
-import { Tracker } from '../components/Tracker'
+import { Tracker } from '../components/Tracker';
 import { SearchBar } from '../components/SearchBar';
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import {useCookies} from 'react-cookie';
+import LogOut from '../components/LogOut';
 
 function StockPrice() {
     const location = useLocation();
@@ -10,6 +12,7 @@ function StockPrice() {
     const splitTicker = getPath.split('/');
     const ticker = splitTicker[splitTicker.length - 1]; // holds the ticker
     const navigate = useNavigate();
+    const [cookies] = useCookies(['jwt']);
     
     return (
         <>
@@ -22,8 +25,12 @@ function StockPrice() {
                         <SearchBar />
                     </div>
                     <div className='move-right'>
-                    <a href='/SignUp' className='link-sign'>Sign Up</a>
-                    <a href='/Login' className='link-sign'>Login</a>
+                    {cookies.jwt !== "" && <LogOut />}
+                        {cookies.jwt === "" && 
+                        <>
+                            <a href='/SignUp' className='link-sign'>Sign Up</a>
+                            <a href='/Login' className='link-sign'>Login</a>
+                        </>}
                     </div>
                 </div>
             </div>

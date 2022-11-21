@@ -15,7 +15,7 @@ function SignUp() {
     console.log(data);
 
     try {
-      const response = await fetch("http://localhost:5000/user/register", {
+      const response = await fetch("/user/register", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -26,7 +26,7 @@ function SignUp() {
       if(!response.ok) {
         throw new Error("Login Failed");
       }
-      navigate("/");
+      navigate("/Login");
 
     } catch (err) {
       console.log(err);

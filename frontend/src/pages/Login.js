@@ -1,36 +1,29 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-//import {useCookies} from 'react-cookie';
+import {useCookies} from 'react-cookie';
 
 function Login() {
-  const [email, setEmail] = useState("");
+  const [user_email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  //const [cookie, setCookie] = useCookies("");
-  const [user, setUser] = useState(false);
+  const [cookies, setCookies] = useCookies(['jwt']);
   const navigate = useNavigate();
-
+  
   const usr_login = async() => {
-    let data = {email, password};
-    console.log(data);
-
+    let data = {user_email, password};
+    
     try {
-      const response = await fetch("http://localhost:5000/user/login", {
+      await fetch("/user/login", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
           "Content-type": "application/json",
         },
+      }).then(res => res.json()).then(token => {
+        if(token.detail !== "Email not found") {
+          setCookies('jwt', token)
+          navigate("/");
+        }
       });
-      //.then(res => setCookie(res.data))
-
-      if(!response.ok) {
-        throw new Error("Login Failed");
-      }
-
-      let loggedIn = await response.json();
-      setUser(loggedIn);
-      navigate("/");
-
     } catch (err) {
       console.log(err);
     }
@@ -51,7 +44,7 @@ function Login() {
           <p>Don't have an account? <a href='/SignUp' style={{color: "blue"}}>Sign Up</a></p>
         </div>
       </div>
-      {console.log(email, password)}
+      {console.log(user_email, password, cookies.jwt)}
     </>
   )
 }
