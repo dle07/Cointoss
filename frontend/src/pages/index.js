@@ -19,9 +19,7 @@ function Landing() {
                         <SearchBar />
                     </div>
                     <div className='move-right'>
-                        {cookies.jwt !== "" && <LogOut />}
-                        {cookies.jwt === "" && 
-                        <>
+                        {(cookies.jwt !== "" && cookies.jwt !== undefined) ? <LogOut /> : <>
                             <a href='/SignUp' className='link-sign'>Sign Up</a>
                             <a href='/Login' className='link-sign'>Login</a>
                         </>}

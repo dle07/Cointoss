@@ -174,3 +174,8 @@ td {
     margin-left: 10px;
     float: left;
 }
+
+.portfolio-searchbar {
+    float: right;
+    display: flex;
+}

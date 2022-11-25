@@ -19,7 +19,7 @@ function Login() {
           "Content-type": "application/json",
         },
       }).then(res => res.json()).then(token => {
-        if(token.detail !== "Email not found") {
+        if(token.detail !== "Email not found" && token.detail !== "Invalid Credentials") {
           setCookies('jwt', token)
           navigate("/");
         }

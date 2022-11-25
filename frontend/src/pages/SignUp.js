@@ -1,8 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function validEmail() {
-  
+function isValidEmail(email_) {
+  const checkEmail = new RegExp('^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$');
+  if(!checkEmail.test(email_)) {
+    return false;
+  }
+  return true;
 }
 
 function SignUp() {
@@ -12,22 +16,23 @@ function SignUp() {
 
   const usr_register = async() => {
     let data = {email, password};
-    console.log(data);
-
+    let validEmail = isValidEmail(data.email);
+    
     try {
-      const response = await fetch("/user/register", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-type": "application/json",
-        },
-      });
+      if(validEmail) {
+        const response = await fetch("/user/register", {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-type": "application/json",
+          },
+        });
 
-      if(!response.ok) {
-        throw new Error("Login Failed");
+        if(!response.ok) {
+          throw new Error("Login Failed");
+        }
+        navigate("/Login");
       }
-      navigate("/Login");
-
     } catch (err) {
       console.log(err);
     }

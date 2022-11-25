@@ -4,8 +4,6 @@ import HeatMap from 'react-heatmap-grid'
 import { useNavigate } from "react-router-dom"
 
 const xLabels = new Array(7).fill(0).map((_, i) => `${''}`);
-const tick = ['AAPL', 'MSFT', 'IBM', 'GOOG', 'AMZN', 'TSLA', 'BRK-B', 'UNH', 'XOM', 'JNJ', 'V', 'JPM', 'WMT', 'NVDA', 'CVX', 'LLY', 'TSM', 'PG', 'MA', 'BAC', 'HD'];
-
 const yLabels = ["", "", ""];
 
 //create data array filled with 0
@@ -19,12 +17,22 @@ let dataPosition = new Array(yLabels.length)
     .map(() =>
         new Array(xLabels.length).fill(0));
 
+const trendTickersVolume = new Array(yLabels.length)
+    .fill(0)
+    .map(() =>
+        new Array(xLabels.length).fill(0));
+
 function Heatmap() {
     const [rawData, setRawData] = useState([]);
+    const [trendingTickers, setTrendingTickers] = useState([]);
+    //const tick = ['AAPL', 'MSFT', 'IBM', 'GOOG', 'AMZN', 'TSLA', 'BRK-B', 'UNH', 'XOM', 'JNJ', 'V', 'JPM', 'WMT', 'NVDA', 'CVX', 'LLY', 'TSM', 'PG', 'MA', 'BAC', 'HD'];
 
-    //grabs data from backend
+    //grabs data from backend (top 21 tickers by volume and their prices)
     const fetchData = async () => {
-        axios.get(`/stock-data?tickerSymbol=${tick}&timePeriod=1d`).then(res => setRawData(res.data[0]))
+        axios.get(`/highest-volume?limit=21`).then(res => {
+            setTrendingTickers(res.data.tickers);
+            axios.get(`/stock-data?tickerSymbol=${res.data.tickers}&timePeriod=1d`).then(res => setRawData(res.data[0])) ;
+        });
     };
     useEffect(() => {
         fetchData();
@@ -36,20 +44,24 @@ function Heatmap() {
     for (let j = 0; j < data.length; ++j) {
         for (let k = 0; k < data[j].length; ++k) {
             //Only works if there is more than one ticker symbol in the tick array as it is dependent on the format of the data being returned
-            data[j][k] = tick[tickCounter] + '\n' + rawData[`('Close', '${tick[tickCounter]}')`]?.toFixed(2);
+            data[j][k] = trendingTickers[tickCounter] + '\n' + rawData[`('Close', '${trendingTickers[tickCounter]}')`]?.toFixed(2);
+            trendTickersVolume[j][k] = rawData[`('Volume', '${trendingTickers[tickCounter]}')`];
             ++tickCounter;
         }
     }
+    //console.log(trendTickersVolume);
+    //console.log(Math.max(trendTickersVolume))
 
     //stores tickers in 2d array format
     let tickCount = 0;
     for (let j = 0; j < data.length; ++j) {
       for (let k = 0; k < data[j].length; ++k) {
-          dataPosition[j][k] = tick[tickCount];
+          dataPosition[j][k] = trendingTickers[tickCount];
           ++tickCount;
       }
     }
     const navigate = useNavigate();
+    let count = 1;
 
     return (
         <>
@@ -64,7 +76,7 @@ function Heatmap() {
                     squares
                     onClick={(x, y) => navigate(`/StockPrice/${dataPosition[y][x]}`)}
                     cellStyle={(background, value, min, max, data, x, y, color, fontWeight) => ({ 
-                        background: `rgba(00, 255, 00, ${Math.floor(Math.random() * 100) / 100})`,
+                        background: `rgba(00, 255, 00, ${1/(count+=0.15)})`,
                         fontSize: "15px",
                         fontWeight: "bold"
                     })}

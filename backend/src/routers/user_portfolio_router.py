@@ -30,7 +30,7 @@ async def get_portfolio(jwt_token: str = Header(default = None, description= "JW
     email = getUserEmailFromJwt(jwt_token)
     content = jsonable_encoder({           # Encode to json
         "user_email" : email,
-        "tracked tickers" : retrieveTrackedStocks(email)
+        "tracked_tickers" : retrieveTrackedStocks(email)
     })
     return JSONResponse(content)
 
