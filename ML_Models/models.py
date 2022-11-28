@@ -1,11 +1,11 @@
-import datetime
 import numpy as np
 import pandas as pd
 import yfinance as yf
+import pandas_market_calendars as mcal
 from fastapi import APIRouter, Response
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
-from datetime import date
+from datetime import date, datetime, timedelta
 from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
@@ -58,13 +58,20 @@ async def time_series_test(tickerSymbol):
     pred_price_scaled = time_series_model.predict(np.array(x_pred))
     pred_price_unscaled = scaler_pred.inverse_transform(pred_price_scaled.reshape(-1, 1))
 
-    pred_price_dict ={
-        "day1": pred_price_unscaled.ravel()[0].item(),
-        "day2": pred_price_unscaled.ravel()[1].item(),
-        "day3": pred_price_unscaled.ravel()[2].item(),
-        "day4": pred_price_unscaled.ravel()[3].item(),
-        "day5": pred_price_unscaled.ravel()[4].item(),
-    }
+    nyse_cal = mcal.get_calendar('NYSE')
+
+    current_date = datetime.today()
+    end_date = current_date + timedelta(days = 14)
+    
+    nyse_next_days = nyse_cal.valid_days(start_date=current_date, end_date=end_date)
+
+    pred_price_dict =[
+        {"date": nyse_next_days[0].date(), "prediction": pred_price_unscaled.ravel()[0].item()},
+        {"date": nyse_next_days[1].date(), "prediction": pred_price_unscaled.ravel()[1].item()},
+        {"date": nyse_next_days[2].date(), "prediction": pred_price_unscaled.ravel()[2].item()},
+        {"date": nyse_next_days[3].date(), "prediction": pred_price_unscaled.ravel()[3].item()},
+        {"date": nyse_next_days[4].date(), "prediction": pred_price_unscaled.ravel()[4].item()}
+    ]
 
     return pred_price_dict
 

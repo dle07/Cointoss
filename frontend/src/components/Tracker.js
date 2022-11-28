@@ -83,6 +83,8 @@ export function Tracker(ticker) {
     const [modelPredictions, setModelPredictions] = useState([]);
     const x_coord = [];
     const y_coord = [];
+    const x_pred = [];
+    const y_pred = [];
 
    const fetchData = async () => {
        axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setData(res.data));
@@ -91,8 +93,6 @@ export function Tracker(ticker) {
     useEffect(()=> {
         fetchData();
     }, []);
-
-    console.log(modelPredictions);
 
     //pushes the last 100 days worth on data into array
     for(let i = data.length - 1; i >= data.length - 100; i--) {
@@ -108,6 +108,14 @@ export function Tracker(ticker) {
         x_coord[i] = year + '-' + month + '-' + day;
     }
 
+    //push prediction data into array
+    for (let i = 0; i < modelPredictions.length; ++i) {
+        x_pred.push(modelPredictions[i].date);
+        y_pred.push(modelPredictions[i].prediction);
+    }
+
+    console.log(y_pred);
+
     return (
         <>
             <Plot data={[
@@ -116,8 +124,18 @@ export function Tracker(ticker) {
                     y: y_coord,
                     type: 'scatter',
                     mode: 'lines+markers', 
-                    marker: {color: 'red'},
-                }]}
+                    marker: { color: 'red' },
+                    name: "Price History"
+                },
+                {
+                    x: x_pred,
+                    y: y_pred,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    marker: { color: 'blue' },
+                    name: "Prediction"
+                }
+            ]}
                 layout={ {width: "50%", height: "auto", title: ticker.name + ' ' + data[data.length - 1]?.Close.toFixed(2)} }
             />
         </>
