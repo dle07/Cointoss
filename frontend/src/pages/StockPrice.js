@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation } from "react-router-dom"
-import { Tracker, MoreInfo } from '../components/Tracker'
+import { Tracker } from '../components/Tracker'
 import { SearchBar } from '../components/SearchBar';
 import { useNavigate } from "react-router-dom"
 
@@ -29,7 +29,6 @@ function StockPrice() {
             </div>
             <div className='search-track'>
                 <Tracker name={ticker} />
-                <MoreInfo name={ticker}/>
                 <button onClick={() => navigate(`/HistoricalData/${ticker}`)}>Historical Data</button>
             </div>
         </>

@@ -36,7 +36,7 @@ function Heatmap() {
     for (let j = 0; j < data.length; ++j) {
         for (let k = 0; k < data[j].length; ++k) {
             //Only works if there is more than one ticker symbol in the tick array as it is dependent on the format of the data being returned
-            data[j][k] = tick[tickCounter] + '\n' + rawData[`('Close', '${tick[tickCounter]}')`];
+            data[j][k] = tick[tickCounter] + '\n' + rawData[`('Close', '${tick[tickCounter]}')`]?.toFixed(2);
             ++tickCounter;
         }
     }

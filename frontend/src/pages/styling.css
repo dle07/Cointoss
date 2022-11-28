@@ -147,3 +147,30 @@ button:hover {
     justify-content: center;
     align-items: center;
 }
+
+/*Historical Data Table*/
+tr {
+    border-bottom: 1px solid black;
+}
+
+table{
+    margin-top: 50px;
+    width: 80%;
+    margin: 50px auto;
+    position: static;
+    border-collapse: collapse;
+    font-size: 25px;
+}
+
+td {
+    padding: 10px 20px;
+    font-size: 18px;
+}
+
+.back {
+    color: black;
+    font-weight: bolder;
+    font-size: 40px;
+    margin-left: 10px;
+    float: left;
+}
