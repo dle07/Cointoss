@@ -32,7 +32,7 @@ padded_sequence = pad_sequences(encoded_docs, maxlen=200)
 """
 
 @router.get("/ml/time-series")
-async def time_series_test(tickerSymbol):
+async def time_series(tickerSymbol):
     #set sequence length to thee lengththe model was trained with
     sequence_length = 50
     df = yf.download(tickerSymbol)
