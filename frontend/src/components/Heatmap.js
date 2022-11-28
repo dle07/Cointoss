@@ -25,6 +25,7 @@ const trendTickersVolume = new Array(yLabels.length)
 function Heatmap() {
     const [rawData, setRawData] = useState([]);
     const [trendingTickers, setTrendingTickers] = useState([]);
+    //const [modelPredictions, setModelPredictions] = useState([]);
     //const tick = ['AAPL', 'MSFT', 'IBM', 'GOOG', 'AMZN', 'TSLA', 'BRK-B', 'UNH', 'XOM', 'JNJ', 'V', 'JPM', 'WMT', 'NVDA', 'CVX', 'LLY', 'TSM', 'PG', 'MA', 'BAC', 'HD'];
 
     //grabs data from backend (top 21 tickers by volume and their prices)
@@ -32,12 +33,17 @@ function Heatmap() {
         axios.get(`/highest-volume?limit=21`).then(res => {
             setTrendingTickers(res.data.tickers);
             axios.get(`/stock-data?tickerSymbol=${res.data.tickers}&timePeriod=1d`).then(res => setRawData(res.data[0]));
+            /*for(let i = 0; i < res.data.tickers.length; i++) {
+                axios.get(`/ml/time-series?tickerSymbol=${res.data.tickers[i]}`).then(res => setModelPredictions(res.data[4].prediction));
+            }*/
+            //axios.get(`/ml/time-series?tickerSymbol=AAPL`).then(res => setModelPredictions(res.data));
         });
     };
     useEffect(() => {
         fetchData();
     }, []);
 
+    //console.log(modelPredictions);
     let tickCounter = 0;
 
     //replaces data array with actual data
@@ -49,7 +55,8 @@ function Heatmap() {
             ++tickCounter;
         }
     }
-    console.log(trendTickersVolume);
+    
+    //console.log(trendTickersVolume);
     //console.log(Math.max(trendTickersVolume))
 
     //stores tickers in 2d array format

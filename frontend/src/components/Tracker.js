@@ -95,7 +95,7 @@ export function Tracker(ticker) {
     }, []);
 
     //pushes the last 100 days worth on data into array
-    for(let i = data.length - 1; i >= data.length - 100; i--) {
+    for(let i = data.length - 1; i >= data.length - 5; i--) {
         x_coord.push(data[i]?.Date);
         y_coord.push(data[i]?.Close);
     }
