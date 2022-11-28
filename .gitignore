@@ -2,5 +2,6 @@ data/**
 test.py
 venv
 .vs/
+__pycache__/
 webserver_key.pem
 notes.txt
