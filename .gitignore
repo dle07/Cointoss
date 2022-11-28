@@ -5,3 +5,4 @@ venv
 __pycache__/
 webserver_key.pem
 notes.txt
+**/.DS_Store

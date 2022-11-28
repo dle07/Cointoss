@@ -3,6 +3,7 @@ import './SearchBar.css'
 import Symbols from './symbols.json'
 import { useNavigate } from "react-router-dom"
 
+/*
 function HandleClick() {
     const navigate = useNavigate();
     const stockSymbol = document.querySelectorAll('div .eachResults');
@@ -11,11 +12,12 @@ function HandleClick() {
         navigate(`/StockPrice/${ticker.innerText}`)
     }));
     return '';
-}
+} */
 
 export function SearchBar() {
     const [newSymbol, setNewSymbol] = useState([]);
-    
+    const navigate = useNavigate();
+
     return (
         <div className="search">
             <div className="input">
@@ -35,16 +37,22 @@ export function SearchBar() {
             {newSymbol.length !== 0 && (
                 <div className="results">
                     {newSymbol.slice(0, 10).map((data) => {
+                        let correct_Format = data.symbol;
+                        if(data.symbol.includes('.')) {
+                            correct_Format = correct_Format.replace('.', '-');
+                        }
                         return (
-                            <div className="eachResults">
-                                <p>{data.symbol}</p>
+                            <div className="eachResults" onClick={() => {
+                                //window.location.reload(); //refresh the page every time you search for a new ticker
+                                navigate(`/StockPrice/${correct_Format}`)
+                                window.location.reload();
+                            }}>
+                                <p>{correct_Format}</p>
                             </div>
                         );
                     })}        
                 </div>
             )}
-            <HandleClick />
-            
         </div>
     );
 }

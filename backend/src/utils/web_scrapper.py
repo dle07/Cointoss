@@ -31,7 +31,7 @@ def scrapeData(ticker:str, days_back:int = 3) -> Path:
 
     with open(file_path ,mode = 'a', newline='', encoding='utf-8') as csvFile:
         writer = csv.writer(csvFile, delimiter=',')
-        writer.writerow(["text,created_at,source"])
+        writer.writerow(["text","created_at","source"])
         with ThreadPoolExecutor(10) as executor:
             futures = [
                 executor.submit(queryByTickerTwitter, ticker),
