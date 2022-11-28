@@ -45,14 +45,14 @@ def scrapeData(ticker:str, days_back:int = 3) -> Path:
         
 
 def queryByTickerTwitter(ticker:str, days_back = 3):
+    ticker = ticker.upper()
     client = tweepy.Client(bearer_token = TWITTER_BEARER_TOKEN)
     query = ticker.upper().lstrip('$') + " lang:en -is:retweet"
     rows = []
-    for tweet in tweepy.Paginator(client.search_recent_tweets, query=query,tweet_fields=['created_at'], max_results=100,start_time = None).flatten(limit=1000):
-        if( re.search('\$VOO', tweet.text) != None):
+    for tweet in tweepy.Paginator(client.search_recent_tweets, query=query,tweet_fields=['created_at'], max_results=100,start_time = None).flatten(limit=500):
+        if( tweet.text.find(ticker) != -1):
             row = [tweet.text, str(tweet.created_at), "twitter"]
             rows.append(row)
-    print(len(rows))
     return rows
 
 
@@ -73,7 +73,7 @@ def queryByTickerReddit(ticker:str, limit = 1000, days_back = 3):
                     
 def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
     rows = []
-    links = []
+    links = set()
     search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
     res = requests.get(url = search_url)
     soup = BeautifulSoup(res.content, 'html.parser')
@@ -81,7 +81,7 @@ def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
     for a in soup.find_all('a', href=True, limit = limit):
         href = a['href']
         if( href.startswith("./articles") ):
-            links.append("http://news.google.com" + href[1:])
+            links.add("http://news.google.com" + href[1:])
 
     with ThreadPoolExecutor(max_workers=100) as executor:
         executor.map(scrape_news_article, links, repeat(rows))   
@@ -93,6 +93,7 @@ def scrape_news_article(url,rows):
         article = Article(url)
         article.download()
         article.parse()
+        
         rows.append([article.text,article.publish_date, url])
     except Exception as e :
         print(str(e))
