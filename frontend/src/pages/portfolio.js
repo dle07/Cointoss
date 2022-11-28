@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {SearchBar} from '../components/SearchBar';
 import {useCookies} from 'react-cookie';
 import axios from 'axios';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Portfolio() {
   const [cookies] = useCookies(['jwt']);
@@ -60,21 +61,21 @@ export default function Portfolio() {
         </div>
       </div>
       <div>
-      <table>
+      <table style={{width: "45%"}}>
         <thead>
           <tr>
             <th scope='col'>Ticker Symbol</th>
             <th scope='col'>Price</th>
-            <th scope='col'>Delete</th>
+            <th scope='col'></th>
           </tr>
         </thead>
         <tbody>
           {tickerList.map((eachTicker, i) => {
             return (
-              <tr>
+              <tr key={i}>
                 <td>{eachTicker}</td>
                 <td>{tickerPrice[`('Close', '${eachTicker}')`]?.toFixed(2)}</td>
-                <td onClick={() => {deleteTicker(eachTicker)}} style={{borderStyle: "solid"}}>X</td>
+                <td onClick={() => {deleteTicker(eachTicker)}} style={{color: 'red'}}><CloseIcon/></td>
               </tr>
             );
           })}

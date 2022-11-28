@@ -5,8 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #4793BD;
-  background-repeat: no-repeat;
+  background-image: url("/public/bg_img.jpg");
+  /*background-color: #4793BD;*/
+  background-repeat: repeat;
 }
 
 code {

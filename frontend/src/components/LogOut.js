@@ -9,7 +9,7 @@ export default function LogOut() {
 
   return (
     <div>
-      {cookies.jwt !== "" && <h1 onClick={removeCookie}>Log Out</h1>}
+      {cookies.jwt !== "" && <h1 onClick={removeCookie}>Log&nbsp;Out</h1>}
     </div>
   )
 }

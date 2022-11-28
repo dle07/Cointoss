@@ -24,12 +24,12 @@ function about_us() {
                 <h2 className='prediction'>Sentiment Analysis</h2>
                 <p className='texts'>
                   Sentiment Analysis uses natural language processing to determine the tone behind the text.
-                  <ul>
-                    <li>Negative: Predicts stock price will decrease</li>
-                    <li>Neutral: No change</li>
-                    <li>Positive: Predicts stock price will increase</li>
-                  </ul>
                 </p>
+                <ul className='texts'>
+                  <li>Negative: Predicts stock price will decrease</li>
+                  <li>Neutral: No change</li>
+                  <li>Positive: Predicts stock price will increase</li>
+                </ul>
               </div>
             </div>
             <div className='container-mg'>

@@ -20,6 +20,8 @@ input {
     overflow-y: auto;
     border-radius: 5px;
     margin-left: 12px;
+    position: absolute;
+    z-index: 10;
 }
 
 .results::-webkit-scrollbar {

@@ -31,7 +31,7 @@ function Heatmap() {
     const fetchData = async () => {
         axios.get(`/highest-volume?limit=21`).then(res => {
             setTrendingTickers(res.data.tickers);
-            axios.get(`/stock-data?tickerSymbol=${res.data.tickers}&timePeriod=1d`).then(res => setRawData(res.data[0])) ;
+            axios.get(`/stock-data?tickerSymbol=${res.data.tickers}&timePeriod=1d`).then(res => setRawData(res.data[0]));
         });
     };
     useEffect(() => {
@@ -49,7 +49,7 @@ function Heatmap() {
             ++tickCounter;
         }
     }
-    //console.log(trendTickersVolume);
+    console.log(trendTickersVolume);
     //console.log(Math.max(trendTickersVolume))
 
     //stores tickers in 2d array format
@@ -76,13 +76,13 @@ function Heatmap() {
                     squares
                     onClick={(x, y) => navigate(`/StockPrice/${dataPosition[y][x]}`)}
                     cellStyle={(background, value, min, max, data, x, y, color, fontWeight) => ({ 
-                        background: `rgba(00, 255, 00, ${1/(count+=0.15)})`,
-                        fontSize: "15px",
+                        background: `rgba(00, 255, 00, ${1/(count+=0.13)})`,
+                        fontSize: "20px",
                         fontWeight: "bold"
                     })}
                     cellRender={(value) => value}
                     title={(value, unit) => `${value}`}
-                    height={170}
+                    height={180}
                 />
             </div>
         </>
