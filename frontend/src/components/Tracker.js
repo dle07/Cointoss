@@ -24,7 +24,7 @@ export function MoreInfo(ticker) {
     const volume = [];
 
    const fetchData = async () => {
-        axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setInfo(res.data))
+       axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setInfo(res.data))
     };
     useEffect(()=> {
         fetchData();
@@ -80,11 +80,15 @@ export function MoreInfo(ticker) {
 
 export function Tracker(ticker) {
     const [data, setData] = useState([]);
+    const [modelPredictions, setModelPredictions] = useState([]);
     const x_coord = [];
     const y_coord = [];
+    const x_pred = [];
+    const y_pred = [];
 
    const fetchData = async () => {
-        axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setData(res.data))
+       axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setData(res.data));
+       axios.get(`/ml/time-series?tickerSymbol=${ticker.name}`).then(res => setModelPredictions(res.data));
     };
     useEffect(()=> {
         fetchData();
@@ -104,6 +108,14 @@ export function Tracker(ticker) {
         x_coord[i] = year + '-' + month + '-' + day;
     }
 
+    //push prediction data into array
+    for (let i = 0; i < modelPredictions.length; ++i) {
+        x_pred.push(modelPredictions[i].date);
+        y_pred.push(modelPredictions[i].prediction);
+    }
+
+    console.log(y_pred);
+
     return (
         <>
             <Plot data={[
@@ -112,8 +124,18 @@ export function Tracker(ticker) {
                     y: y_coord,
                     type: 'scatter',
                     mode: 'lines+markers', 
-                    marker: {color: 'red'},
-                }]}
+                    marker: { color: 'red' },
+                    name: "Price History"
+                },
+                {
+                    x: x_pred,
+                    y: y_pred,
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    marker: { color: 'blue' },
+                    name: "Prediction"
+                }
+            ]}
                 layout={ {width: "50%", height: "auto", title: ticker.name + ' ' + data[data.length - 1]?.Close.toFixed(2)} }
             />
         </>

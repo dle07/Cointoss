@@ -5,6 +5,8 @@ import requests
 from bs4 import BeautifulSoup
 from fastapi.responses import JSONResponse
 
+from backend.src.utils import web_scrapper
+
 router = APIRouter()
 
 @router.get("/stock-data")
@@ -31,7 +33,3 @@ async def  get_highest_volume_tickers(limit:int = 21):
 		if(limit == 0):
 			break
 	return JSONResponse(content={"tickers":lst})
-	
-		
-		
-	

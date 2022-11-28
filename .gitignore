@@ -1,7 +1,8 @@
 data/**
 test.py
 venv
-sql/
 .vs/
+__pycache__/
 webserver_key.pem
 notes.txt
+**/.DS_Store

@@ -12,3 +12,12 @@ psql -h cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com -p 5432 -d cointoss -U
 top 21 tickers by trade volume scraper list
 
 curl -X "GET"  http://127.0.0.1:5000/highest-volume?limit=15 
+
+
+For my updates this week I implemented an endpoint that gives yields the n most popular
+tickers by trade volume.This data is intended for use for the front page heatmap.
+There wasn't a free API that gives us this information so the endpoint scrapes 
+the data from a website. The portion of it can be seen on the right.
+
+In addition to this I talked to Jason about the backend endpoints for frontend-backend
+integration
