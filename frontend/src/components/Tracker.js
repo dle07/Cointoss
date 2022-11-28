@@ -63,7 +63,7 @@ export function MoreInfo(ticker) {
             <tbody>
                 {dates.map((index, i) => {
                     return(
-                        <tr>
+                        <tr key={i}>
                             <td>{dates[i]}</td>
                             <td>{open_price[i]}</td>
                             <td>{high_price[i]}</td>

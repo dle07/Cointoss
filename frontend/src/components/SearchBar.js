@@ -36,13 +36,13 @@ export function SearchBar() {
             
             {newSymbol.length !== 0 && (
                 <div className="results">
-                    {newSymbol.slice(0, 10).map((data) => {
+                    {newSymbol.slice(0, 10).map((data, i) => {
                         let correct_Format = data.symbol;
                         if(data.symbol.includes('.')) {
                             correct_Format = correct_Format.replace('.', '-');
                         }
                         return (
-                            <div className="eachResults" onClick={() => {
+                            <div className="eachResults" key={i} onClick={() => {
                                 //window.location.reload(); //refresh the page every time you search for a new ticker
                                 navigate(`/StockPrice/${correct_Format}`)
                                 window.location.reload();
