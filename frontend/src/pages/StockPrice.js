@@ -4,6 +4,7 @@ import { Tracker } from '../components/Tracker';
 import { SearchBar } from '../components/SearchBar';
 import { useNavigate } from "react-router-dom";
 import {useCookies} from 'react-cookie';
+import { Sentiment } from '../components/Sentiment';
 
 function StockPrice() {
     const location = useLocation();
@@ -48,6 +49,9 @@ function StockPrice() {
                 <Tracker name={ticker} />
                 <button onClick={() => navigate(`/HistoricalData/${ticker}`)}>Historical Data</button>
                 <button onClick={() => addTicker()}>Add to Portfolio</button>
+            </div>
+            <div>
+                <Sentiment name={ticker} />
             </div>
         </>
     )
