@@ -1,0 +1,13 @@
+.column {
+    float: left;
+    width: 45%;
+    padding: 10px;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
