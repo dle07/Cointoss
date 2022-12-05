@@ -11,3 +11,26 @@
     display: table;
     clear: both;
 }
+.bar-container {
+    float: left;
+    margin-left: 10%;
+    margin-right: 10%;
+    width: 80%;
+    height: 30px;
+    display: flex;
+}
+.positive {
+    background-color: lawngreen;
+    height: inherit;
+    border-radius: 13px 0px 0px 13px;
+    text-align: center;
+}
+.negative {
+    background-color: orangered;
+    height: inherit;
+    border-radius: 0px 13px 13px 0px;
+    text-align: center;
+}
+.loading{
+    text-align: center;
+}
