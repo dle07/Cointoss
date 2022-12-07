@@ -12,6 +12,7 @@ function isValidEmail(email_) {
 function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const usr_register = async() => {
@@ -32,6 +33,8 @@ function SignUp() {
           throw new Error("Login Failed");
         }
         navigate("/Login");
+      } else {
+        setError("Invalid Email");
       }
     } catch (err) {
       console.log(err);
@@ -49,6 +52,7 @@ function SignUp() {
           <input type="text" placeholder='Username' className='usr-pass' name="email" onChange={(e) => {setEmail(e.target.value)}} />
           <input type="password" placeholder='Password' className='usr-pass' name="password" onChange={(e) => {setPassword(e.target.value)}} />
           <button onClick={() => usr_register()} className='btn'>Sign Up</button>
+          {error !== "" && <p style={{color: "red"}}>{error}</p>}
           <a href='/' style={{color: "gray"}}>Go back</a>
           <p>Already have an account? <a href='/Login' style={{color: "blue"}}>Login</a></p>
         </div>

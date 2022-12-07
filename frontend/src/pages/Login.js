@@ -6,6 +6,7 @@ function Login() {
   const [user_email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cookies, setCookies] = useCookies(['jwt']);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   
   const usr_login = async() => {
@@ -22,6 +23,8 @@ function Login() {
         if(token.detail !== "Email not found" && token.detail !== "Invalid Credentials") {
           setCookies('jwt', token)
           navigate("/");
+        } else {
+          setError("Invalid Email/Password");
         }
       });
     } catch (err) {
@@ -40,6 +43,7 @@ function Login() {
           <input type="email" placeholder='Email' className='usr-pass' name="email" onChange={(e) => {setEmail(e.target.value)}} />
           <input type="password" placeholder='Password' className='usr-pass' name="password" onChange={(e) => {setPassword(e.target.value)}} />
           <button onClick={() => usr_login()}className='btn'>Login</button>
+          {error !== "" && <p style={{color: "red"}}>{error}</p>}
           <a href='/' style={{color: "gray"}}>Go back</a>
           <p>Don't have an account? <a href='/SignUp' style={{color: "blue"}}>Sign Up</a></p>
         </div>

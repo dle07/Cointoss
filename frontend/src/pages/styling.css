@@ -182,3 +182,34 @@ td {
     float: right;
     display: flex;
 }
+
+.sentiment {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    color: black;
+    width: 80%;
+    height: 200px;
+    margin: 130px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.hist_add {
+    justify-content: space-evenly;
+    display: flex;
+    margin-top: -45px;
+}
+
+.button_price {
+    width: 20%;
+    height: 40px;
+    background-color: #315DCC;
+    border-radius: 10px;
+    border-color: #315DCC;
+    color: white;
+    font-size: 20px;
+    margin-top: -10px;
+}

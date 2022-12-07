@@ -14,6 +14,7 @@ function StockPrice() {
     const navigate = useNavigate();
     const [cookies] = useCookies(['jwt']);
     const [ticker] = useState(splitTicker[splitTicker.length - 1]);
+    const [showSentimentLabel, setShowSentimentLabel] = useState(false);
     
     const addTicker = async() => {
         const token = `Bearer ${cookies.jwt.auth_token}`;
@@ -32,6 +33,14 @@ function StockPrice() {
             console.log(err);
         }
     };
+
+    const showSentiment = () => {
+        if(showSentimentLabel === false) {
+            setShowSentimentLabel(true);
+        } else {
+            setShowSentimentLabel(false);
+        }
+    }
     
     return (
         <>
@@ -47,12 +56,13 @@ function StockPrice() {
             </div>
             <div className='search-track'>
                 <Tracker name={ticker} />
-                <button onClick={() => navigate(`/HistoricalData/${ticker}`)}>Historical Data</button>
-                <button onClick={() => addTicker()}>Add to Portfolio</button>
             </div>
-            <div>
-                <Sentiment name={ticker} />
+            <div className='hist_add'>
+                <button onClick={() => navigate(`/HistoricalData/${ticker}`)} className='button_price'>Historical Data</button>
+                <button onClick={() => showSentiment()} className='button_price'>Sentiment Label</button>
+                <button onClick={() => addTicker()} className='button_price'>Add to Portfolio</button>
             </div>
+            {(showSentimentLabel) && <div className='sentiment'><Sentiment name={ticker} /></div>}
         </>
     )
 }
