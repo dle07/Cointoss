@@ -31,7 +31,7 @@ def scrapeData(ticker:str, days_back:int = 3) -> Path:
 
     with open(file_path ,mode = 'a', newline='', encoding='utf-8') as csvFile:
         writer = csv.writer(csvFile, delimiter=',')
-        writer.writerow(["text","created_at","source"])
+        writer.writerow(["text","created_at","source","headline"])
         with ThreadPoolExecutor(10) as executor:
             futures = [
                 executor.submit(queryByTickerTwitter, ticker),
@@ -74,7 +74,8 @@ def queryByTickerReddit(ticker:str, limit = 1000, days_back = 3):
 def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
     rows = []
     links = set()
-    search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
+
+    search_url = "https://news.google.com/search?q={0}%20when%3A{1}d&hl=en".format(ticker, days_back)
     res = requests.get(url = search_url)
     soup = BeautifulSoup(res.content, 'html.parser')
 
@@ -94,14 +95,23 @@ def scrape_news_article(url,rows):
         article.download()
         article.parse()
         
-        rows.append([article.text,article.publish_date, url])
+        rows.append([article.text,article.publish_date, url, article.title])
     except Exception as e :
         print(str(e))
         return 
 
 
 
-
+def scrape_finbiz(ticker= "AAPL",days_back = 3):
+    search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
+    res = requests.get(url = search_url)
+    soup = BeautifulSoup(res.content, 'html.parser')
+    pprint(soup)
+    # search_url = "https://finviz.com/quote.ashx?t={0}L&p=d".format(ticker)
+    # res = requests.get(url = search_url)
+    # soup = BeautifulSoup(res.content, 'html.parser')
+    # pprint(soup)
+    pass
 #Article dict keys : ['source', 'author', 'title', 'description', 'url', 'urlToImage', 'publishedAt', 'content']
 def queryByTickerNewsAPI(ticker:str, days_back = 3):
     rows = []

@@ -24,10 +24,10 @@ db:  # AWS RDS database
   #psql -h cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com -p 5432 -d cointoss -U postgres 
   #GtPbxOqdLh4AhZeFH90i
 
-  database: cointoss
-  user_name: cointoss
-  password: password123
-  host: localhost
-  port: 5432
+  # database: cointoss
+  # user_name: cointoss
+  # password: password123
+  # host: localhost
+  # port: 5432
 
   

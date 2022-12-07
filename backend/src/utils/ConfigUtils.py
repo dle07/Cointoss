@@ -22,11 +22,11 @@ class ConfigUtils():
     jwt_secret = valuesYaml["jwt_secret"]
 
     # DB VALUES
-    db_name = valuesYaml["db"]["database"]
-    db_username = valuesYaml["db"]["user_name"]
-    db_password = valuesYaml["db"]["password"]
-    db_host = valuesYaml["db"]["host"]
-    db_port = valuesYaml["db"]["port"]
+    # db_name = valuesYaml["db"]["database"]
+    # db_username = valuesYaml["db"]["user_name"]
+    # db_password = valuesYaml["db"]["password"]
+    # db_host = valuesYaml["db"]["host"]
+    # db_port = valuesYaml["db"]["port"]
 
 
 

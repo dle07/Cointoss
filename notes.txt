@@ -21,3 +21,6 @@ the data from a website. The portion of it can be seen on the right.
 
 In addition to this I talked to Jason about the backend endpoints for frontend-backend
 integration
+
+
+ttps://news.google.com/search?q=AAPL%20when%3A3d&hl=en

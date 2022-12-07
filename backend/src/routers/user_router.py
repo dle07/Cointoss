@@ -17,28 +17,28 @@ router = APIRouter()
 
 
 
-@router.post("/user/register")
-async def register(userRegistration: UserRegistration):
-    pprint(type(userRegistration))
-    try:
-        registerUser(userRegistration)
-    except:
-        pass
+# @router.post("/user/register")
+# async def register(userRegistration: UserRegistration):
+#     pprint(type(userRegistration))
+#     try:
+#         registerUser(userRegistration)
+#     except:
+#         pass
 
 
-@router.post("/user/login")
-async def login(userLogin: UserLogin):
-    result:tuple(3) = getUserByEmail(userLogin.user_email)
+# @router.post("/user/login")
+# async def login(userLogin: UserLogin):
+#     result:tuple(3) = getUserByEmail(userLogin.user_email)
 
-    if(result == None):
-        raise HTTPException(status_code = 401,detail = "Email not found")
-    if( bcrypt.checkpw(userLogin.password.encode(), result[2].encode()) == False ):
-        raise HTTPException(status_code = 401, detail = "Invalid Credentials" )
-    content = jsonable_encoder({           # Encode to json
-        "auth_token": encode_auth_token(userLogin.user_email)
+#     if(result == None):
+#         raise HTTPException(status_code = 401,detail = "Email not found")
+#     if( bcrypt.checkpw(userLogin.password.encode(), result[2].encode()) == False ):
+#         raise HTTPException(status_code = 401, detail = "Invalid Credentials" )
+#     content = jsonable_encoder({           # Encode to json
+#         "auth_token": encode_auth_token(userLogin.user_email)
 
-    })
-    return JSONResponse(content)
+#     })
+#     return JSONResponse(content)
 
 
 
