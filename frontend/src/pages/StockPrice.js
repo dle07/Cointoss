@@ -59,7 +59,7 @@ function StockPrice() {
             </div>
             <div className='hist_add'>
                 <button onClick={() => navigate(`/HistoricalData/${ticker}`)} className='button_price'>Historical Data</button>
-                <button onClick={() => showSentiment()} className='button_price'>Sentiment Label</button>
+                <button onClick={() => showSentiment()} className='button_price'>Headlines</button>
                 <button onClick={() => addTicker()} className='button_price'>Add to Portfolio</button>
             </div>
             {(showSentimentLabel) && <div className='sentiment'><Sentiment name={ticker} /></div>}
