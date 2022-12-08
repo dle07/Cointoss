@@ -33,7 +33,6 @@ def validTwitterTweet(tweet, ticker) -> bool:
     return True
 
 def scrapeData(ticker:str, days_back:int = 3) -> Path:
-    rows = []
     file_path = create_csv_path("sentiment")
 
     with open(file_path ,mode = 'a', newline='', encoding='utf-8') as csvFile:
@@ -41,20 +40,23 @@ def scrapeData(ticker:str, days_back:int = 3) -> Path:
         writer.writerow(["text","created_at","source"])
         with ThreadPoolExecutor(10) as executor:
             futures = [
-                executor.submit(queryByTickerTwitter, ticker, rows),
-                executor.submit(queryByTickerReddit, ticker,rows,  days_back = 3),
-                executor.submit(queryByTickerGoogle, ticker, rows, days_back = 3)
+                executor.submit(queryByTickerTwitter, ticker, ),
+                executor.submit(queryByTickerReddit, ticker,  days_back = 3),
+                executor.submit(queryByTickerGoogle, ticker,days_back = 3)
             ]            
-        writer.writerows(rows)
+            for future in as_completed(futures):
+                writer.writerows(future.result())
+
     return Path(file_path)
         
 
-def queryByTickerTwitter(ticker:str,rows, days_back = 3,):
+def queryByTickerTwitter(ticker:str, days_back = 3,):
+    rows = []
     ticker = ticker.upper()
     client = tweepy.Client(bearer_token = TWITTER_BEARER_TOKEN)
     query = ticker.upper().lstrip('$') + " lang:en -is:retweet"
     
-    for tweet in tweepy.Paginator(client.search_recent_tweets, query=query,tweet_fields=['created_at'], max_results=100,start_time = None).flatten(limit=500):
+    for tweet in tweepy.Paginator(client.search_recent_tweets, query=query,tweet_fields=['created_at'], max_results=100,start_time = None).flatten(limit=250):
         
         if( validTwitterTweet(tweet.text,ticker)):
             row = [tweet.text, str(tweet.created_at), "twitter"]
@@ -62,7 +64,7 @@ def queryByTickerTwitter(ticker:str,rows, days_back = 3,):
     return rows
 
 
-def queryByTickerReddit(ticker:str, rows:list, limit = 1000,   days_back = 3,):
+def queryByTickerReddit(ticker:str, limit = 1000,   days_back = 3,):
     # subreddits to query from: /r/stocks /r/wallstreetbets /r/investing /r/StockMarket
     now = datetime.now()
     reddit = praw.Reddit( client_id=REDDIT_CLIENT_ID, client_secret=REDDIT_CLIENT_SECRET, user_agent="cointossgang")
@@ -71,13 +73,12 @@ def queryByTickerReddit(ticker:str, rows:list, limit = 1000,   days_back = 3,):
         created = datetime.fromtimestamp(post.created_utc)
         if (now - created).days <= days_back :  # Check to see if post is within 3 days
             rows.append([post.selftext, str(created),"reddit"])
-    print(len(rows))
     return rows
 
 
 
-@cached(cache=TTLCache(maxsize=40,ttl=18000))
-def queryByTickerGoogle(ticker:str, rows, days_back:int = 3, limit = 100):
+@cached(cache=TTLCache(maxsize=5,ttl=18000))
+def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
     rows = []
     links = set()
     search_url = "https://news.google.com/search?q={0}%20when%3A{1}d&hl=en".format(ticker, days_back)
@@ -126,14 +127,20 @@ def queryByTickerNewsAPI(ticker:str, days_back = 3):
     return rows
 
 
+
+
+
 def scrape_data_everything_endpoint(ticker:str, days_back:int = 3):
     rows = []
     
     with ThreadPoolExecutor(10) as executor:
         futures = [
-            executor.submit(queryByTickerTwitter, ticker, rows),
-            executor.submit(queryByTickerReddit, ticker,rows,  days_back = 3),
-            executor.submit(queryByTickerGoogle, ticker, rows, days_back = 3)
+            executor.submit(queryByTickerTwitter, ticker),
+            executor.submit(queryByTickerReddit, ticker,  days_back = 3),
+            executor.submit(queryByTickerGoogle, ticker, days_back = 3)
         ]            
+        for future in as_completed(futures):
+                for x in future.result():
+                    rows.append(x)
     return rows
     

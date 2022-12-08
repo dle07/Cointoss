@@ -19,11 +19,8 @@ router = APIRouter(tags=["User"])
 
 @router.post("/user/register")
 async def register(userRegistration: UserRegistration):
-    pprint(type(userRegistration))
-    try:
-        registerUser(userRegistration)
-    except:
-        pass
+    registerUser(userRegistration)
+    
 
 
 @router.post("/user/login")
