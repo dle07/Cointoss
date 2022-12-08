@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from backend.src.utils.exception_decorators import jwt_exception_handler
 
-router = APIRouter()
+router = APIRouter(tags=["Portfolio"])
 
 
 @router.post("/portfolio/add")

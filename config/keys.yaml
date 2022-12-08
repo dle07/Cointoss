@@ -23,11 +23,10 @@ db:  # AWS RDS database
 
   #psql -h cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com -p 5432 -d cointoss -U postgres 
   #GtPbxOqdLh4AhZeFH90i
-
-  database: cointoss
-  user_name: cointoss
-  password: password123
-  host: localhost
+  host: ec2-52-71-23-11.compute-1.amazonaws.com
+  database: d1p6q4h7dhi24a
+  user_name: qpgtomdjxijpgm
+  password: de8388a3d4fa6b1c957b1f0f9ec6b2ce813879a9a713763cb7c21d1df04b25c5
   port: 5432
-
+  uri: postgres://qpgtomdjxijpgm:de8388a3d4fa6b1c957b1f0f9ec6b2ce813879a9a713763cb7c21d1df04b25c5@ec2-52-71-23-11.compute-1.amazonaws.com:5432/d1p6q4h7dhi24a
   

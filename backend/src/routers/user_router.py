@@ -13,7 +13,7 @@ from backend.src.routers.models import UserLogin, UserRegistration
 import bcrypt
 
 from backend.src.utils.auth import encode_auth_token
-router = APIRouter()
+router = APIRouter(tags=["User"])
 
 
 

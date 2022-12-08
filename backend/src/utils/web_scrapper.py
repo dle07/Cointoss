@@ -10,7 +10,7 @@ import requests
 import tweepy
 from bs4 import BeautifulSoup
 from backend.src.utils.ConfigUtils import ConfigUtils
-
+from cachetools import cached, LRUCache, TTLCache
 from newspaper import Article
 from itertools import repeat
 
@@ -24,6 +24,8 @@ REDDIT_CLIENT_ID = ConfigUtils.REDDIT_CLIENT_ID
 REDDIT_CLIENT_SECRET = ConfigUtils.REDDIT_CLIENT_SECRET
 
 NEWS_API_KEY = ConfigUtils.NEWSAPI_KEY
+def validTwitterTweet(tweet, ticker) -> bool:
+    pass
 
 def scrapeData(ticker:str, days_back:int = 3) -> Path:
 
@@ -70,11 +72,11 @@ def queryByTickerReddit(ticker:str, limit = 1000, days_back = 3):
 
 
 
-                    
+@cached(cache=TTLCache(maxsize=40,ttl=18000))
 def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
     rows = []
     links = set()
-    search_url = "https://news.google.com/search?q={0}+{1}&hl=en".format(ticker, days_back)
+    search_url = "https://news.google.com/search?q={0}%20when%3A{1}d&hl=en".format(ticker, days_back)
     res = requests.get(url = search_url)
     soup = BeautifulSoup(res.content, 'html.parser')
 
@@ -93,11 +95,11 @@ def scrape_news_article(url,rows):
         article = Article(url)
         article.download()
         article.parse()
-        
-        rows.append([article.text,article.publish_date, url])
+        rows.append([article.text,article.publish_date, url, article.title])
     except Exception as e :
         print(str(e))
-        return 
+        print("EXITING")
+        return []
 
 
 
@@ -118,3 +120,18 @@ def queryByTickerNewsAPI(ticker:str, days_back = 3):
     for article in articles:
         rows.append([article["content"], article["publishedAt"]])
     return rows
+
+
+def scrape_data_everything_endpoint(ticker:str, days_back:int = 3):
+    rows = []
+    with ThreadPoolExecutor(10) as executor:
+            futures = [
+                executor.submit(queryByTickerTwitter, ticker),
+                executor.submit(queryByTickerReddit, ticker, days_back = 3),
+                executor.submit(queryByTickerGoogle, ticker, days_back = 3)
+            ]          
+            for future in as_completed(futures):
+                if( future.result() != None):
+                    rows.append(future.result())
+    return rows
+    
