@@ -57,7 +57,6 @@ function SignUp() {
           <p>Already have an account? <a href='/Login' style={{color: "blue"}}>Login</a></p>
         </div>
       </div>
-      {console.log(email, password)}
     </>
   )
 }

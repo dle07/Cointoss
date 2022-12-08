@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import HeatMap from 'react-heatmap-grid'
 import { useNavigate } from "react-router-dom"
+import LoadingGif from "../pages/Images/loadingAnimation.gif"
 
 const xLabels = new Array(7).fill(0).map((_, i) => `${''}`);
 const yLabels = ["", "", ""];
@@ -51,7 +52,7 @@ function Heatmap() {
                             let difference_in_price = responses[tickCounter].data[4].prediction - price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`];
                             //setPriceDiff(difference_in_price);
                             setPriceDiffArray(priceDiff => [...priceDiff, difference_in_price]);
-                            data[j][k] = res.data.tickers[tickCounter] + '\n' + price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`]?.toFixed(2) + '\n/ ' 
+                            data[j][k] = res.data.tickers[tickCounter] + '\n' + price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`]?.toFixed(2) + '\n/ Pre: ' 
                             + responses[tickCounter].data[4].prediction?.toFixed(2);
                             //trendTickersVolume[j][k] = rawData[`('Volume', '${trendingTickers[tickCounter]}')`];
                             ++tickCounter;
@@ -82,7 +83,7 @@ function Heatmap() {
     }
     const navigate = useNavigate();
     if (loading) {
-        return <div className='center'><h1>Loading...</h1></div>;
+        return <div className='center_gif'><img src={LoadingGif} alt="Loading..." width="300"/></div>;
     }
 
     let count = 0;
@@ -111,7 +112,7 @@ function Heatmap() {
                             squares
                             onClick={(x, y) => navigate(`/StockPrice/${dataPosition[y][x]}`)}
                             cellStyle={(background, value, min, max, data, x, y, color, fontWeight) => ({ 
-                                background: `rgba(00, 255, 00, ${arr[count++]/1})`,
+                                background: `rgba(17, 255, 00, ${arr[count++]/1})`,
                                 fontSize: "20px",
                                 fontWeight: "bold"
                             })}
