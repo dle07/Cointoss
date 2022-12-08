@@ -25,7 +25,12 @@ REDDIT_CLIENT_SECRET = ConfigUtils.REDDIT_CLIENT_SECRET
 
 NEWS_API_KEY = ConfigUtils.NEWSAPI_KEY
 def validTwitterTweet(tweet, ticker) -> bool:
-    pass
+    
+    matches = re.findall(r'[$][A-Za-z][\S]*', tweet)
+    for i in matches:
+        if(i != ticker):
+            return False
+    return True
 
 def scrapeData(ticker:str, days_back:int = 3) -> Path:
     rows = []
@@ -50,7 +55,8 @@ def queryByTickerTwitter(ticker:str,rows, days_back = 3,):
     query = ticker.upper().lstrip('$') + " lang:en -is:retweet"
     
     for tweet in tweepy.Paginator(client.search_recent_tweets, query=query,tweet_fields=['created_at'], max_results=100,start_time = None).flatten(limit=500):
-        if( tweet.text.find(ticker) != -1):
+        
+        if( validTwitterTweet(tweet.text,ticker)):
             row = [tweet.text, str(tweet.created_at), "twitter"]
             rows.append(row)
     return rows
