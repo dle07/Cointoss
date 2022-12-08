@@ -77,23 +77,24 @@ async def time_series(tickerSymbol):
 
 
 @router.get("/ml/sentiment")
-async def sentiment_test(tickerSymbol, days_back=3):
+async def sentiment(tickerSymbol, days_back=3):
     scrapped_data_path = web_scrapper.scrapeData(tickerSymbol, days_back) #need to figure out a way to only call this only once for a certain time period.
     scraped_data = pd.read_csv(scrapped_data_path)
     scraped_data_text = scraped_data.dropna(subset=["text"])["text"].reset_index(drop = True)
 
-    print(scraped_data_text.shape)
-
     tw = tokenizer.texts_to_sequences(scraped_data_text)
     tw = pad_sequences(tw,maxlen=200)
-    predictions = sentiment_model.predict(tw).round()
+    predictions = sentiment_model.predict(tw)#.round()
 
     headlines_sentiment = pd.concat([scraped_data_text, pd.DataFrame(predictions, columns=['sentiment'])], axis = 1)
 
+    #This section turns float values from prediction to Positive/Negative. 
+    """"
     def parse_predictions(prediction):
         sentiment = sentiment_label[1][prediction]
         return sentiment
 
     headlines_sentiment['sentiment'] = headlines_sentiment['sentiment'].apply(parse_predictions)
+    """
 
     return headlines_sentiment.to_dict(orient='records')
