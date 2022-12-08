@@ -20,14 +20,14 @@ export default function Portfolio() {
     console.log(ticker_);
     
     try {
-      await fetch("/portfolio/delete", {
-        method: "DELETE",
-        body: JSON.stringify(ticker_),
-        headers: {
-          "jwt-token": token,
-          "Content-type": "application/json",
-        },
-      }).then(window.location.reload());
+        await fetch("/portfolio/delete", {
+            method: "DELETE",
+            body: JSON.stringify(ticker_),
+            headers: {
+                "jwt-token": token,
+                "Content-type": "application/json",
+            },
+        }).then(retrieveTickers());//window.location.reload());
     } catch (err) {
       console.log(err);
     }
