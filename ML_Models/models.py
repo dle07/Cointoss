@@ -35,7 +35,7 @@ padded_sequence = pad_sequences(encoded_docs, maxlen=200)
 async def time_series(tickerSymbol):
     #set sequence length to thee lengththe model was trained with
     sequence_length = 50
-    df = yf.download(tickerSymbol)
+    df = yf.download(tickerSymbol,period="5y")
     FEATURES = ['High', 'Low', 'Open', 'Close', 'Volume', 'Adj Close']
     df_filtered = df.filter(FEATURES)
     np_data_unscaled = np.array(df_filtered)
