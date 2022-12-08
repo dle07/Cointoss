@@ -3,17 +3,6 @@ import './SearchBar.css'
 import Symbols from './symbols.json'
 import { useNavigate } from "react-router-dom"
 
-/*
-function HandleClick() {
-    const navigate = useNavigate();
-    const stockSymbol = document.querySelectorAll('div .eachResults');
-    stockSymbol.forEach(ticker => ticker.addEventListener("click", function() {
-        window.location.reload(); //refresh the page every time you search for a new ticker
-        navigate(`/StockPrice/${ticker.innerText}`)
-    }));
-    return '';
-} */
-
 export function SearchBar() {
     const [newSymbol, setNewSymbol] = useState([]);
     const navigate = useNavigate();
@@ -43,7 +32,6 @@ export function SearchBar() {
                         }
                         return (
                             <div className="eachResults" key={i} onClick={() => {
-                                //window.location.reload(); //refresh the page every time you search for a new ticker
                                 navigate(`/StockPrice/${correct_Format}`)
                                 window.location.reload();
                             }}>

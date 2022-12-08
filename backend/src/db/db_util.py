@@ -4,11 +4,12 @@ from backend.src.utils.ConfigUtils import ConfigUtils
 import atexit
 
 connection_pool = SimpleConnectionPool(1,5,
-    database= ConfigUtils.db_name, 
-    user = ConfigUtils.db_username, 
-    password = ConfigUtils.db_password, 
-    host = ConfigUtils.db_host,
-    port = ConfigUtils.db_port,
+    dsn = ConfigUtils.db_uri
+    # database= ConfigUtils.db_name, 
+    # user = ConfigUtils.db_username, 
+    # password = ConfigUtils.db_password, 
+    # host = ConfigUtils.db_host,
+    # port = ConfigUtils.db_port
     
 )
 # 

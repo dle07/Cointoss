@@ -4,7 +4,7 @@
 }
 
 .logo {
-    color: #0000FF;
+    color: gold;
     text-decoration: none;
     font-weight: bolder;
     font-size: 40px;
@@ -72,12 +72,13 @@ footer {
 }
 
 .link {
-    color:black;
+    color:white;
     margin-left: 13px;
     margin-top: 20px;
     font-size: 18px;
     display:flex;
     font-weight: 600;
+    text-decoration: none;
 }
 
 .adj-search {
@@ -86,12 +87,13 @@ footer {
 }
 
 .link-sign {
-    color: black;
+    color: white;
     text-decoration: none;
     float: right;
     margin-left: 30px;
     font-size: 18px;
     display: flex;
+    justify-content: flex-end;
 }
 
 .move-right {
@@ -151,7 +153,7 @@ button:hover {
 
 /*Historical Data Table*/
 tr {
-    border-bottom: 3px solid black;
+    border-bottom: 3px solid white;
 }
 
 table{
@@ -162,16 +164,18 @@ table{
     border-collapse: collapse;
     font-size: 25px;
     text-align: center;
+    color: white;
 }
 
 td {
     padding: 10px 20px;
     font-size: 18px;
     font-weight: bold;
+    color: white;
 }
 
 .back {
-    color: black;
+    color: white;
     font-weight: bolder;
     font-size: 40px;
     margin-left: 10px;
@@ -181,4 +185,46 @@ td {
 .portfolio-searchbar {
     float: right;
     display: flex;
+}
+
+.sentiment {
+    background: white;
+    border-radius: 10px;
+    padding: 1rem;
+    color: black;
+    width: 80%;
+    height: fit-content;
+    margin: 130px;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.hist_add {
+    justify-content: space-evenly;
+    display: flex;
+    margin-top: -45px;
+}
+
+.button_price {
+    width: 20%;
+    height: 40px;
+    background-color: gold;
+    border-radius: 10px;
+    border-color: black;
+    color: black;
+    font-size: 20px;
+    margin-top: -10px;
+}
+
+.button_price:hover {
+    background-color: darkgoldenrod;
+}
+
+.center_gif {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+    transform: rotate(90deg);
 }

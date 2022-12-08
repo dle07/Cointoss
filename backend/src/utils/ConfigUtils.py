@@ -27,6 +27,7 @@ class ConfigUtils():
     db_password = valuesYaml["db"]["password"]
     db_host = valuesYaml["db"]["host"]
     db_port = valuesYaml["db"]["port"]
+    db_uri = valuesYaml["db"]["uri"]
 
 
 

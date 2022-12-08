@@ -13,17 +13,14 @@ from backend.src.routers.models import UserLogin, UserRegistration
 import bcrypt
 
 from backend.src.utils.auth import encode_auth_token
-router = APIRouter()
+router = APIRouter(tags=["User"])
 
 
 
 @router.post("/user/register")
 async def register(userRegistration: UserRegistration):
-    pprint(type(userRegistration))
-    try:
-        registerUser(userRegistration)
-    except:
-        pass
+    registerUser(userRegistration)
+    
 
 
 @router.post("/user/login")

@@ -1,5 +1,6 @@
 import bcrypt
 from pprint import pprint
+from fastapi import APIRouter, HTTPException
 
 from backend.src.db.db_util import getCursor
 from backend.src.routers.models import UserRegistration   
@@ -19,9 +20,8 @@ def registerUser(userRegistration: UserRegistration):
             INSERT INTO users (email, pass_word)
             VALUES(%s, %s)
             """, ( userRegistration.email, encrypted_password.decode()))
-    except Exception as e:
-        pprint(e)
-        return e
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail = str(e))
 
 def getUserByEmail(email):
     try:
