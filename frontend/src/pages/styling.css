@@ -189,7 +189,7 @@ td {
     padding: 1rem;
     color: black;
     width: 80%;
-    height: 200px;
+    height: fit-content;
     margin: 130px;
     justify-content: center;
     align-items: center;
