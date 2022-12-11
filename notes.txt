@@ -1,11 +1,8 @@
 
 
-git clone git@github.com:<your_git_user_name>/<repo_name>.git .
-
-git clone git@github.com:dle07/cointoss.git git 
-
-psql -h cointoss.came1bfngzcs.us-east-1.rds.amazonaws.com -p 5432 -d cointoss -U postgres 
-
+curl -nX GET https://api.heroku.com/apps/cointoss-db \
+-H "Accept: application/vnd.heroku+json; version=3" 
+-H "Authorization: Bearer 64670203-f3f1-4217-ac0d-6b52db3bb1f6"
 
 
 
@@ -14,14 +11,18 @@ top 21 tickers by trade volume scraper list
 curl -X "GET"  http://127.0.0.1:5000/highest-volume?limit=15 
 
 
-For my updates this week I implemented an endpoint that gives yields the n most popular
-tickers by trade volume.This data is intended for use for the front page heatmap.
-There wasn't a free API that gives us this information so the endpoint scrapes 
-the data from a website. The portion of it can be seen on the right.
-
-In addition to this I talked to Jason about the backend endpoints for frontend-backend
-integration
 
 
 https://news.google.com/search?q=AAPL+{1}&hl=en
 https://news.google.com/search?q={0}%20when%3A{1}d&hl=en
+
+
+psql postgres://qpgtomdjxijpgm:de8388a3d4fa6b1c957b1f0f9ec6b2ce813879a9a713763cb7c21d1df04b25c5@ec2-52-71-23-11.compute-1.amazonaws.com:5432/d1p6q4h7dhi24a
+
+
+curl -nX GET https://api.heroku.com/apps/01234567-89ab-cdef-0123-456789abcdef
+
+
+curl -n https://api.heroku.com/apps/cointoss-db/config-vars \
+  -H "Accept: application/vnd.heroku+json; version=3"
+

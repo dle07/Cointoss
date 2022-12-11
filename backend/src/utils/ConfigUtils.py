@@ -30,6 +30,9 @@ class ConfigUtils():
     db_uri = valuesYaml["db"]["uri"]
 
 
+    heroku_o_auth_token = valuesYaml["heroku_oauth_token"]
+
+
 
 
 
