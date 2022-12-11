@@ -70,9 +70,20 @@ export function Sentiment(ticker) {
     return (
         <div>
             <div class="bar-container">
-                <div class="positive" style={postiveBarWidth}>Positve</div>
-                <div class="negative" style={negativeBarWidth}>Negative</div>
+                <div 
+                    class="positive" style={postiveBarWidth}>
+                    <div class="tooltip"> Positive
+                        <span class="tooltiptext">  {positiveSentiment} </span>
+                     </div>
+                </div>
+                <div class="negative" style={negativeBarWidth}>
+                    <div class="tooltip"> Negative
+                        <span class="tooltiptext"> {negativeSentiment} </span>
+                     </div>
+                </div>
+                
             </div>
+            
            <div class="row">
                 <div class="column">
                     <h3>News</h3>
@@ -83,15 +94,7 @@ export function Sentiment(ticker) {
                     <p>{modelSentiment[4].text}</p>
                     {newsContent}
                 </div>
-               <div class="column">
-                    <h3>Sentiment</h3>
-                    <p>{modelSentiment[0].sentiment}</p>
-                    <p>{modelSentiment[1].sentiment}</p>
-                    <p>{modelSentiment[2].sentiment}</p>
-                    <p>{modelSentiment[3].sentiment}</p>
-                    <p>{modelSentiment[4].sentiment}</p>
-                    {sentimentContent}
-                </div>
+               
             </div>
             <button type="button" onClick={addNewsElement}>Load More</button>
         </div>
