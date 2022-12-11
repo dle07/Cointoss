@@ -73,7 +73,7 @@ async def time_series(tickerSymbol):
         {"date": nyse_next_days[4].date(), "prediction": pred_price_unscaled.ravel()[4].item()}
     ]
 
-    return pred_price_dict
+    return {"ticker":tickerSymbol,"pred_price_dict": pred_price_dict}
 
 
 @router.get("/ml/sentiment")
