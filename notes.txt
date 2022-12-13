@@ -26,3 +26,5 @@ curl -nX GET https://api.heroku.com/apps/01234567-89ab-cdef-0123-456789abcdef
 curl -n https://api.heroku.com/apps/cointoss-db/config-vars \
   -H "Accept: application/vnd.heroku+json; version=3"
 
+
+let difference_in_price = cache.get(current_ticker)[4].prediction - price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`];

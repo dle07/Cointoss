@@ -20,7 +20,7 @@ async def get_stock_data(tickerSymbol, timePeriod=None): # valid periods: 1d,5d,
 @router.get("/highest-volume")
 async def  get_highest_volume_tickers(limit:int = 21):
 
-	@cached(cache=TTLCache(maxsize=50, ttl=1800))
+	@cached(cache=TTLCache(maxsize=50, ttl=(60)*(60)*(1.5)))
 	def get_highest_volume_tickers_func(limit:int=21):
 		if( limit > 100):
 			limit = 100

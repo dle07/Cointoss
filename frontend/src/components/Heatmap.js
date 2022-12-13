@@ -3,9 +3,10 @@ import axios from 'axios';
 import HeatMap from 'react-heatmap-grid'
 import { useNavigate } from "react-router-dom"
 import LoadingGif from "../pages/Images/loadingAnimation.gif"
-
+import SingletonCache from '../Utils/FrontPageCache';
 const xLabels = new Array(7).fill(0).map((_, i) => `${''}`);
 const yLabels = ["", "", ""];
+
 
 //create data array filled with 0
 let data = new Array(yLabels.length)
@@ -23,6 +24,7 @@ const trendTickersVolume = new Array(yLabels.length)
     .map(() =>
         new Array(xLabels.length).fill(0));
 
+
 function Heatmap() {
     const [loading, setLoading] = useState(true);
     //const [rawData, setRawData] = useState([]);
@@ -35,7 +37,7 @@ function Heatmap() {
     //grabs data from backend (top 21 tickers by volume and their prices)
     const fetchData = async () => {
         axios.get(`/highest-volume?limit=21`).then(res => {
-            setTrendingTickers(res.data.tickers);
+            setTrendingTickers([ ... res.data.tickers]);
             axios.get(`/stock-data?tickerSymbol=${res.data.tickers}&timePeriod=1d`).then(price => {
                 //setRawData(price.data[0])
                 for(let i = 0; i < res.data.tickers.length; i++) {
@@ -44,14 +46,14 @@ function Heatmap() {
                 //axios.get(`/ml/time-series?tickerSymbol=AAPL`).then(res => setModelPredictions(res.data));
 
                 Promise.all(promises).then(responses => {
-                    console.log("printing promises now")
+                    console.log(responses)
                     //console.log(typeof(responses[0].data[4].prediction))
                     //console.log(typeof(price.data[0][`('Close', '${res.data.tickers[0]}')`]))
                     //console.log(responses[0].data[4].prediction - price.data[0][`('Close', '${res.data.tickers[0]}')`])
                     let tickCounter = 0; //
                     for (let j = 0; j < data.length; ++j) {
                         for (let k = 0; k < data[j].length; ++k) {
-                            console.log(typeof responses[tickCounter].data.pred_price_dict)
+                            
                             let difference_in_price = responses[tickCounter].data.pred_price_dict[4].prediction - price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`];
                             //setPriceDiff(difference_in_price);
                             setPriceDiffArray(priceDiff => [...priceDiff, difference_in_price]);
@@ -98,7 +100,7 @@ function Heatmap() {
             arr.push(1);
         }
     }
-    console.log(arr);
+
 
     return (
         <>

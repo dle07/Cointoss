@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@tanstack/react-query": "^4.19.1",
     "lru-cache": "^7.14.1"
   }
 }
