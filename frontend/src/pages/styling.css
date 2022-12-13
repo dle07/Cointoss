@@ -12,9 +12,16 @@
     float: left;
 }
 
+.info {
+    height:0px;
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+}
+
 .about {
     text-align: center;
-    margin-right: 130px;
+    justify-content: center;
     color: white;
 }
 
@@ -228,3 +235,17 @@ td {
     margin-bottom: 50px;
     transform: rotate(90deg);
 }
+/*Heatmap
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    padding: 10px;
+}
+
+.grid-item {
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0,0,0,0.5);
+    padding:20px;
+    font-size: 30px;
+    text-align: center;
+}*/
