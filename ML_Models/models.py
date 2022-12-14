@@ -91,9 +91,9 @@ async def sentiment(tickerSymbol, days_back=3):
 
     scrapped_data_json = router.get('http://localhost:5000/scrape_data')
 
-    scraped_data = scrapped_data_json
+    scraped_data_text = json.loads(scrapped_data_json.text)
 
-    scraped_data_text = scraped_data.dropna(subset=["text"])["text"].reset_index(drop = True)
+    scraped_data_text = json.dumps(scraped_data_text)
 
     tw = tokenizer.texts_to_sequences(scraped_data_text)
     tw = pad_sequences(tw,maxlen=200)
