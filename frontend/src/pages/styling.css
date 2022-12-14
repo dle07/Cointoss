@@ -235,17 +235,27 @@ td {
     margin-bottom: 50px;
     transform: rotate(90deg);
 }
-/*Heatmap
-.grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
-    padding: 10px;
+
+.portfolio_content {
+    padding: 8px 16px;
+    background-color: #242424;
+    margin: 16px 2px;
+    border-radius: 20px;
+    display: inline-block;
 }
 
-.grid-item {
-    background-color: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(0,0,0,0.5);
-    padding:20px;
-    font-size: 30px;
-    text-align: center;
-}*/
+.portfolio_content p {
+    margin: 6px 0;
+    color: white;
+    font-size: 20px;
+}
+
+.portfolio_content h3 {
+    margin: 10px 0;
+    color: yellow;
+    font-size: 25px;
+}
+
+.portfolio_content h2 {
+    text-align: right;
+}
