@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import pandas_market_calendars as mcal
+import requests
+import json
 from fastapi import APIRouter, Response
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
@@ -82,8 +84,15 @@ async def time_series(tickerSymbol):
 
 @router.get("/ml/sentiment")
 async def sentiment(tickerSymbol, days_back=3):
-    scrapped_data_path = web_scrapper.scrapeData(tickerSymbol, days_back) #need to figure out a way to only call this only once for a certain time period.
-    scraped_data = pd.read_csv(scrapped_data_path)
+    
+    #scrapped_data_path = web_scrapper.scrapeData(tickerSymbol) #need to figure out a way to only call this only once for a certain time period.
+      
+    #scraped_data = pd.read_csv(scrapped_data_path)
+
+    scrapped_data_json = router.get('http://localhost:5000/scrape_data')
+
+    scraped_data = scrapped_data_json
+
     scraped_data_text = scraped_data.dropna(subset=["text"])["text"].reset_index(drop = True)
 
     tw = tokenizer.texts_to_sequences(scraped_data_text)
