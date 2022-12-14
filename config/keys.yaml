@@ -16,6 +16,7 @@ jwt_secret: Di63RBePO4nUnXp2FNMP2Cz9mPgyo7gSTOh5kVgmHr7rM65k6mfpWzGikS7mmBE
 
 heroku_oauth_token: 64670203-f3f1-4217-ac0d-6b52db3bb1f6
 
+
 db:  # AWS RDS database
   # database: cointoss
   # user_name: postgres

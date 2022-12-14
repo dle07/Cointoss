@@ -51,4 +51,6 @@ async def scrape_data(ticker:str):
 	return scrape_data_everything_endpoint(ticker)
 
 
+
+
 	

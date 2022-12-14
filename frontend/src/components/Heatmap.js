@@ -3,7 +3,6 @@ import axios from 'axios';
 import HeatMap from 'react-heatmap-grid'
 import { useNavigate } from "react-router-dom"
 import LoadingGif from "../pages/Images/loadingAnimation.gif"
-import SingletonCache from '../Utils/FrontPageCache';
 const xLabels = new Array(7).fill(0).map((_, i) => `${''}`);
 const yLabels = ["", "", ""];
 
@@ -92,7 +91,6 @@ function Heatmap() {
     }
 
     let count = 0;
-    console.log(priceDiffArray);
     for(let i = 0; i < priceDiffArray.length; i++) {
         if(priceDiffArray[i] < 0) {
             arr.push(0);

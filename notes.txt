@@ -22,9 +22,12 @@ psql postgres://qpgtomdjxijpgm:de8388a3d4fa6b1c957b1f0f9ec6b2ce813879a9a713763cb
 
 curl -nX GET https://api.heroku.com/apps/01234567-89ab-cdef-0123-456789abcdef
 
+https://api.heroku.com/apps/cointoss-db/config-vars
+curl  https://api.heroku.com/apps/cointoss-db/config-vars \
+  -H "Accept: application/vnd.heroku+json; version=3"       \
+  -H "Authorization: Bearer 64670203-f3f1-4217-ac0d-6b52db3bb1f6"
 
-curl -n https://api.heroku.com/apps/cointoss-db/config-vars \
-  -H "Accept: application/vnd.heroku+json; version=3"
+C:\Users\danie\Downloads\cacert.pem
 
 
 let difference_in_price = cache.get(current_ticker)[4].prediction - price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`];
