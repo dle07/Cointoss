@@ -10,7 +10,7 @@ app = FastAPI()
 app.include_router(utility_router.router)
 app.include_router(user_router.router)
 app.include_router(user_portfolio_router.router)
-#python -m backend.src.main
+#python -m backend.src.main to run 
 
 
 

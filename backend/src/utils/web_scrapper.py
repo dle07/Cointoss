@@ -109,7 +109,7 @@ def scrape_news_article(url,rows):
  
 
 
-
+#This function was not used for web scrapping
 #Article dict keys : ['source', 'author', 'title', 'description', 'url', 'urlToImage', 'publishedAt', 'content']
 def queryByTickerNewsAPI(ticker:str, days_back = 3):
     rows = []
