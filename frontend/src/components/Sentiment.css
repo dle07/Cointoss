@@ -6,6 +6,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.sentiment-column {
+    float: left;
+    width: 15%;
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .row:after {
     content: "";
     display: table;

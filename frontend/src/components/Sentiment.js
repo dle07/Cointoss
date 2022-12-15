@@ -6,10 +6,13 @@ import './Sentiment.css'
 
 export function Sentiment(ticker) {
     const [loading, setLoading] = useState(true);
+    const [loading2, setLoading2] = useState(true);
     const [modelSentiment, setModelSentiment] = useState([]);
+    const [modelSentimentNews, setModelSentimentNews] = useState([]);
 
     const fetchData = async () => {
-        axios.get(`/ml/sentiment?tickerSymbol=${ticker.name}`).then(res => { setModelSentiment(res.data); setLoading(false); });
+        axios.get(`/ml/sentiment?tickerSymbol=\$${ticker.name}`).then(res => { setModelSentiment(res.data); setLoading(false); });
+        axios.get(`/ml/sentiment-news?tickerSymbol=\$${ticker.name}`).then(res => { setModelSentimentNews(res.data); setLoading2(false); });
     };
     useEffect(() => {
         fetchData();
@@ -38,40 +41,38 @@ export function Sentiment(ticker) {
     const [currItem, setCurrItem] = useState(5);
 
     const addNewsElement = () => {
-        if (currItem + 5 > modelSentiment.length) {
+        if (currItem + 5 > modelSentimentNews.length) {
             console.log('Out of items');
         } else {
-            const newsElement1 = <p>{modelSentiment[currItem].text}</p>;
-            const newSentiment1 = <p>{modelSentiment[currItem].sentiment}</p>;
+            const newsElement1 = <p><a href={modelSentimentNews[currItem].source}>{modelSentimentNews[currItem].title}</a></p>;
+            const newSentiment1 = <p>{modelSentimentNews[currItem].sentiment}</p>;
 
-            const newsElement2 = <p>{modelSentiment[currItem+1].text}</p>;
-            const newSentiment2 = <p>{modelSentiment[currItem + 1].sentiment}</p>;
+            const newsElement2 = <p><a href={modelSentimentNews[currItem + 1].source}>{modelSentimentNews[currItem + 1].title}</a></p>;
+            const newSentiment2 = <p>{modelSentimentNews[currItem +1].sentiment}</p>;
 
-            const newsElement3 = <p>{modelSentiment[currItem+2].text}</p>;
-            const newSentiment3 = <p>{modelSentiment[currItem + 2].sentiment}</p>;
+            const newsElement3 = <p><a href={modelSentimentNews[currItem + 2].source}>{modelSentimentNews[currItem + 2].title}</a></p>;
+            const newSentiment3 = <p>{modelSentimentNews[currItem + 2].sentiment}</p>;
 
-            const newsElement4 = <p>{modelSentiment[currItem+3].text}</p>;
-            const newSentiment4 = <p>{modelSentiment[currItem + 3].sentiment}</p>;
+            const newsElement4 = <p><a href={modelSentimentNews[currItem+ 3].source}>{modelSentimentNews[currItem + 3].title}</a></p>;
+            const newSentiment4 = <p>{modelSentimentNews[currItem + 3].sentiment}</p>;
 
-            const newsElement5 = <p>{modelSentiment[currItem+4].text}</p>;
-            const newSentiment5 = <p>{modelSentiment[currItem + 4].sentiment}</p>;
+            const newsElement5 = <p><a href={modelSentimentNews[currItem + 4].source}>{modelSentimentNews[currItem + 4].title}</a></p>;
+            const newSentiment5 = <p>{modelSentimentNews[currItem + 4].sentiment}</p>;
 
-            setNewsContent(() => [...newsContent, newsElement1, newsElement2, newsElement3, newsElement4, newsElement5]);
-            setSentimentContent(() => [...sentimentContent, newSentiment1, newSentiment2, newSentiment3, newSentiment4, newSentiment5]);
-            setCurrItem(currItem + 5);
+           setNewsContent(() => [...newsContent, newsElement1, newsElement2, newsElement3, newsElement4, newsElement5]);
+           setSentimentContent(() => [...sentimentContent, newSentiment1, newSentiment2, newSentiment3, newSentiment4, newSentiment5]);
+           setCurrItem(currItem + 5);
         }
     };
 
-
-    if (loading) {
+    if (loading || loading2) {
         return <div class="loading">Loading...</div>;
     }
 
     return (
         <div>
             <div class="bar-container">
-                <div 
-                    class="positive" style={postiveBarWidth}>
+                <div class="positive" style={postiveBarWidth}>
                     <div class="tooltip"> Positive
                         <span class="tooltiptext">  {positiveSentiment} </span>
                      </div>
@@ -87,12 +88,21 @@ export function Sentiment(ticker) {
            <div class="row">
                 <div class="column">
                     <h3>News</h3>
-                    <p>{modelSentiment[0].text}</p>
-                    <p>{modelSentiment[1].text}</p>
-                    <p>{modelSentiment[2].text}</p>
-                    <p>{modelSentiment[3].text}</p>
-                    <p>{modelSentiment[4].text}</p>
+                    <p><a href={modelSentimentNews[0].source}>{modelSentimentNews[0].title}</a></p>
+                    <p><a href={modelSentimentNews[1].source}>{modelSentimentNews[1].title}</a></p>
+                    <p><a href={modelSentimentNews[2].source}>{modelSentimentNews[2].title}</a></p>
+                    <p><a href={modelSentimentNews[3].source}>{modelSentimentNews[3].title}</a></p>
+                    <p><a href={modelSentimentNews[4].source}>{modelSentimentNews[4].title}</a></p>
                     {newsContent}
+                </div>
+                <div class="sentiment-column">
+                    <h3>Sentiment</h3>
+                    <p>{modelSentimentNews[0].sentiment}</p>
+                    <p>{modelSentimentNews[1].sentiment}</p>
+                    <p>{modelSentimentNews[2].sentiment}</p>
+                    <p>{modelSentimentNews[3].sentiment}</p>
+                    <p>{modelSentimentNews[4].sentiment}</p>
+                    {sentimentContent}
                 </div>
                
             </div>
