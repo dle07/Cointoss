@@ -41,13 +41,14 @@ async def  get_highest_volume_tickers(limit:int = 21):
 
 @router.get("/scrape_data_headlines")
 async def scapre_data_headlines(ticker:str):
-
-		
+	if(ticker.startswith("$")==False):
+		ticker = '$' + ticker
 	return queryByTickerGoogle(ticker)
 
 @router.get("/scrape_data", description="Gives Twitter, Reddit, and News Articles")
 async def scrape_data(ticker:str):
-		
+	if(ticker.startswith("$")==False):
+		ticker = '$' + ticker
 	return scrape_data_everything_endpoint(ticker)
 
 
