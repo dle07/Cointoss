@@ -10,7 +10,6 @@ from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from cachetools import cached, LRUCache, TTLCache
 from backend.src.utils import web_scrapper
-from datetime import timedelta
 
 router = APIRouter()
 #Load models
