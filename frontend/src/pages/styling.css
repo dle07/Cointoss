@@ -12,9 +12,16 @@
     float: left;
 }
 
+.info {
+    height:0px;
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+}
+
 .about {
     text-align: center;
-    margin-right: 130px;
+    justify-content: center;
     color: white;
 }
 
@@ -227,4 +234,28 @@ td {
     justify-content: center;
     margin-bottom: 50px;
     transform: rotate(90deg);
+}
+
+.portfolio_content {
+    padding: 8px 16px;
+    background-color: #242424;
+    margin: 16px 2px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.portfolio_content p {
+    margin: 6px 0;
+    color: white;
+    font-size: 20px;
+}
+
+.portfolio_content h3 {
+    margin: 10px 0;
+    color: yellow;
+    font-size: 25px;
+}
+
+.portfolio_content h2 {
+    text-align: right;
 }

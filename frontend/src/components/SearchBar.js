@@ -1,11 +1,29 @@
 import React, {useState} from 'react'
 import './SearchBar.css'
 import Symbols from './symbols.json'
+import axios from 'axios';
 import { useNavigate } from "react-router-dom"
+import SearchIcon from '@mui/icons-material/Search';
 
 export function SearchBar() {
     const [newSymbol, setNewSymbol] = useState([]);
+    const [backupSymbol, setBackupSymbol] = useState([]);
+    const [tickerFound, setTickerFound] = useState(true);
     const navigate = useNavigate();
+
+    const checkSymbol = async () => {
+        if(backupSymbol.length > 0) {
+            axios.get(`/stock-data?tickerSymbol=${backupSymbol}`).then(res => {
+                if(res.data.length > 0) {
+                    setTickerFound(true);
+                    navigate(`/StockPrice/${backupSymbol.toUpperCase()}`);
+                    window.location.reload();
+                } else {
+                    setTickerFound(false);
+                }
+            });
+        }
+     };
 
     return (
         <div className="search">
@@ -17,10 +35,13 @@ export function SearchBar() {
                     });
                     if(targetSymbol === '') {
                         setNewSymbol([]);
+                        setBackupSymbol([]);
                     } else {
                         setNewSymbol(filterData);
+                        setBackupSymbol(targetSymbol);
                     }
                 }}></input>
+                <div className='search-icon' onClick={() => checkSymbol()}><SearchIcon /></div>
             </div>
             
             {newSymbol.length !== 0 && (
@@ -41,6 +62,7 @@ export function SearchBar() {
                     })}        
                 </div>
             )}
+            {tickerFound === false && <p style={{color: "red", position: "absolute"}}>{backupSymbol} is not found</p>}
         </div>
     );
 }

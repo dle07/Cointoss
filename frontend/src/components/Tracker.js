@@ -31,7 +31,7 @@ export function MoreInfo(ticker) {
     }, []);
 
     //pushes the last 100 days worth on data into array
-    for(let i = info.length - 1; i >= info.length - 100; i--) {
+    for(let i = info.length - 1; i >= info.length - 365; i--) {
         dates.push(info[i]?.Date);
         open_price.push(info[i]?.Open);
         high_price.push(info[i]?.High);
