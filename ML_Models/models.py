@@ -32,7 +32,7 @@ vocab_size = len(tokenizer.word_index) + 1
 encoded_docs = tokenizer.texts_to_sequences(tweet)
 padded_sequence = pad_sequences(encoded_docs, maxlen=200)
 """
-@cached(cache=TTLCache(maxsize=21, ttl=(60)*60))   # ttl is in seconds
+@cached(cache=TTLCache(maxsize=21, ttl=timedelta(hours = 1) , timer=datetime.now) )   # ttl is in seconds
 def compute(tickerSymbol):
     #set sequence length to thee lengththe model was trained with
     sequence_length = 50
@@ -75,7 +75,7 @@ def compute(tickerSymbol):
     ]
 
     return {"ticker":tickerSymbol,"pred_price_dict": pred_price_dict}
-    
+
 @router.get("/ml/time-series")
 async def time_series(tickerSymbol):
     return compute(tickerSymbol)
@@ -83,10 +83,6 @@ async def time_series(tickerSymbol):
 
 @router.get("/ml/sentiment")
 async def sentiment(tickerSymbol, days_back=3):
-    
-    #scrapped_data_path = web_scrapper.scrapeData(tickerSymbol) #need to figure out a way to only call this only once for a certain time period.
-      
-    #scraped_data = pd.read_csv(scrapped_data_path)
 
     url = "http://localhost:5000/scrape_data?ticker="+tickerSymbol
 
@@ -112,5 +108,33 @@ async def sentiment(tickerSymbol, days_back=3):
 
     headlines_sentiment['sentiment'] = headlines_sentiment['sentiment'].apply(parse_predictions)
     """
+
+    return headlines_sentiment.to_dict(orient='records')
+
+
+@router.get("/ml/sentiment-news")
+async def sentimentNews(tickerSymbol, days_back=3):
+
+    url = "http://localhost:5000/scrape_data_headlines?ticker="+tickerSymbol
+
+    scrapped_data_json = requests.get(url).json()
+    scrapped_data_df = pd.DataFrame(scrapped_data_json)
+    scrapped_data_df.columns = ["text","created_at","source","title"]
+
+    scraped_data_fix = scrapped_data_df.dropna(subset=["text"]).reset_index(drop = True)
+
+    scraped_data_text = scraped_data_fix["text"]
+
+    tw = tokenizer.texts_to_sequences(scraped_data_text)
+    tw = pad_sequences(tw,maxlen=200)
+    predictions = sentiment_model.predict(tw).round()
+
+    headlines_sentiment = pd.concat([scraped_data_fix, pd.DataFrame(predictions, columns=['sentiment'])], axis = 1)
+
+    def parse_predictions(prediction):
+        sentiment = sentiment_label[1][prediction]
+        return sentiment
+
+    headlines_sentiment['sentiment'] = headlines_sentiment['sentiment'].apply(parse_predictions)
 
     return headlines_sentiment.to_dict(orient='records')

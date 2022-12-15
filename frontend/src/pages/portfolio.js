@@ -27,7 +27,7 @@ export default function Portfolio() {
                 "jwt-token": token,
                 "Content-type": "application/json",
             },
-        }).then(retrieveTickers());//window.location.reload());
+        }).then(window.location.reload());
     } catch (err) {
       console.log(err);
     }
@@ -56,7 +56,7 @@ export default function Portfolio() {
 
         Promise.all(promises).then(responses => {
           for(let j = 0; j < ticker.tracked_tickers.length; j++) {
-            let nextDayprediction = responses[j].data[0].prediction;
+              let nextDayprediction = responses[j].data.pred_price_dict[0].prediction;
             setNextDayPred(prediction => [...prediction, nextDayprediction]);
             setLoading(false);
           }
