@@ -25,8 +25,8 @@ REDDIT_CLIENT_SECRET = ConfigUtils.REDDIT_CLIENT_SECRET
 
 NEWS_API_KEY = ConfigUtils.NEWSAPI_KEY
 def validTwitterTweet(tweet, ticker) -> bool:
-    
-    matches = re.findall(r'[$][A-Za-z](\_)+[\S]*', tweet)
+            # Must begin with $, any number of alphacharacters
+    matches = re.findall(r'[$][A-Za-z]+[_]*[A-Za-z]*', tweet)
     for i in matches:
         if(i != ticker):
             return False
@@ -72,7 +72,7 @@ def queryByTickerReddit(ticker:str, limit = 1000,   days_back = 3,):
     for post in reddit.subreddit("stocks+wallstreetbets+investing+StockMarket").search(query = ticker, time_filter="week",limit = limit ,sort = "relevance"):
         created = datetime.fromtimestamp(post.created_utc)
         if (now - created).days <= days_back :  # Check to see if post is within 3 days
-            rows.append([post.selftext, str(created),"reddit"],"")
+            rows.append([post.selftext, str(created),"reddit",""],)
     return rows
 
 
@@ -131,7 +131,7 @@ def queryByTickerNewsAPI(ticker:str, days_back = 3):
 
 @cached(cache=TTLCache(maxsize=5,ttl = 5))
 def scrape_data_everything_endpoint(ticker:str, days_back:int = 3):
-    rows = []
+    rows = [["text","created_at","source","title"]]
     
     with ThreadPoolExecutor(10) as executor:
         futures = [

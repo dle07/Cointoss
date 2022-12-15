@@ -30,53 +30,52 @@ vocab_size = len(tokenizer.word_index) + 1
 encoded_docs = tokenizer.texts_to_sequences(tweet)
 padded_sequence = pad_sequences(encoded_docs, maxlen=200)
 """
+@cached(cache=TTLCache(maxsize=21, ttl=(60)*60))   # ttl is in seconds
+def compute(tickerSymbol):
+    #set sequence length to thee lengththe model was trained with
+    sequence_length = 50
+    df = yf.download(tickerSymbol,period="5y")
+    FEATURES = ['High', 'Low', 'Open', 'Close', 'Volume', 'Adj Close']
+    df_filtered = df.filter(FEATURES)
+    np_data_unscaled = np.array(df_filtered)
 
+    #Scaler for x values
+    scaler = MinMaxScaler()
+    scaler.fit(np_data_unscaled)
+
+    #scaler for prediction
+    scaler_pred = MinMaxScaler()
+    df_close = pd.DataFrame(df_filtered['Close'])
+    scaler_pred.fit(df_close)
+
+    df_temp = df_filtered[-sequence_length:].values
+    df_temp_scaled = scaler.transform(df_temp)
+
+    x_pred = []
+    x_pred.append(df_temp_scaled)
+
+    pred_price_scaled = time_series_model.predict(np.array(x_pred))
+    pred_price_unscaled = scaler_pred.inverse_transform(pred_price_scaled.reshape(-1, 1))
+
+    nyse_cal = mcal.get_calendar('NYSE')
+
+    current_date = datetime.today()
+    end_date = current_date + timedelta(days = 14)
+    
+    nyse_next_days = nyse_cal.valid_days(start_date=current_date, end_date=end_date)
+
+    pred_price_dict =[
+        {"date": nyse_next_days[0].date(), "prediction": pred_price_unscaled.ravel()[0].item()},
+        {"date": nyse_next_days[1].date(), "prediction": pred_price_unscaled.ravel()[1].item()},
+        {"date": nyse_next_days[2].date(), "prediction": pred_price_unscaled.ravel()[2].item()},
+        {"date": nyse_next_days[3].date(), "prediction": pred_price_unscaled.ravel()[3].item()},
+        {"date": nyse_next_days[4].date(), "prediction": pred_price_unscaled.ravel()[4].item()}
+    ]
+
+    return {"ticker":tickerSymbol,"pred_price_dict": pred_price_dict}
+    
 @router.get("/ml/time-series")
 async def time_series(tickerSymbol):
-
-    @cached(cache=TTLCache(maxsize=21, ttl=(60)*60))   # ttl is in seconds
-    def compute(tickerSymbol):
-        #set sequence length to thee lengththe model was trained with
-        sequence_length = 50
-        df = yf.download(tickerSymbol,period="5y")
-        FEATURES = ['High', 'Low', 'Open', 'Close', 'Volume', 'Adj Close']
-        df_filtered = df.filter(FEATURES)
-        np_data_unscaled = np.array(df_filtered)
-
-        #Scaler for x values
-        scaler = MinMaxScaler()
-        scaler.fit(np_data_unscaled)
-
-        #scaler for prediction
-        scaler_pred = MinMaxScaler()
-        df_close = pd.DataFrame(df_filtered['Close'])
-        scaler_pred.fit(df_close)
-
-        df_temp = df_filtered[-sequence_length:].values
-        df_temp_scaled = scaler.transform(df_temp)
-
-        x_pred = []
-        x_pred.append(df_temp_scaled)
-
-        pred_price_scaled = time_series_model.predict(np.array(x_pred))
-        pred_price_unscaled = scaler_pred.inverse_transform(pred_price_scaled.reshape(-1, 1))
-
-        nyse_cal = mcal.get_calendar('NYSE')
-
-        current_date = datetime.today()
-        end_date = current_date + timedelta(days = 14)
-        
-        nyse_next_days = nyse_cal.valid_days(start_date=current_date, end_date=end_date)
-
-        pred_price_dict =[
-            {"date": nyse_next_days[0].date(), "prediction": pred_price_unscaled.ravel()[0].item()},
-            {"date": nyse_next_days[1].date(), "prediction": pred_price_unscaled.ravel()[1].item()},
-            {"date": nyse_next_days[2].date(), "prediction": pred_price_unscaled.ravel()[2].item()},
-            {"date": nyse_next_days[3].date(), "prediction": pred_price_unscaled.ravel()[3].item()},
-            {"date": nyse_next_days[4].date(), "prediction": pred_price_unscaled.ravel()[4].item()}
-        ]
-
-        return {"ticker":tickerSymbol,"pred_price_dict": pred_price_dict}
     return compute(tickerSymbol)
 
 
