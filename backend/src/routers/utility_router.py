@@ -41,8 +41,6 @@ async def get_stock_data(tickerSymbol, timePeriod=None): # valid periods: 1d,5d,
 
 @router.get("/highest-volume")
 async def  get_highest_volume_tickers(limit:int = 21):
-
-	
 	lst = get_highest_volume_tickers_func(limit)
 	return JSONResponse(content={"tickers":lst})
 
