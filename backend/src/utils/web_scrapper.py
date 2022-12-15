@@ -90,11 +90,9 @@ def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
         href = a['href']
         if( href.startswith("./articles") ):
             links.add("http://news.google.com" + href[1:])
-    
 
     with ThreadPoolExecutor(max_workers=100) as executor:
         executor.map(scrape_news_article, links, repeat(rows))   
-
     return rows        
 
 def scrape_news_article(url,rows):
