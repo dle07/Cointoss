@@ -72,7 +72,7 @@ def queryByTickerReddit(ticker:str, limit = 1000,   days_back = 3,):
     for post in reddit.subreddit("stocks+wallstreetbets+investing+StockMarket").search(query = ticker, time_filter="week",limit = limit ,sort = "relevance"):
         created = datetime.fromtimestamp(post.created_utc)
         if (now - created).days <= days_back :  # Check to see if post is within 3 days
-            rows.append([post.selftext, str(created),"reddit"],"")
+            rows.append([post.selftext, str(created),"reddit",""])
     return rows
 
 
