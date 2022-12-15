@@ -33,6 +33,7 @@ def validTwitterTweet(tweet, ticker) -> bool:
     return True
 
 def scrapeData(ticker:str, days_back:int = 3) -> Path:
+    
     file_path = create_csv_path("sentiment")
 
     with open(file_path ,mode = 'a', newline='', encoding='utf-8') as csvFile:
@@ -80,8 +81,8 @@ def queryByTickerReddit(ticker:str, limit = 1000,   days_back = 3,):
 @cached(cache=TTLCache(maxsize=5,ttl=18000))
 def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
     rows = []
-    links = set()
-    search_url = "https://news.google.com/search?q={0}%20when%3A{1}d&hl=en".format(ticker, days_back)
+    links = set()  #https://news.google.com/search?q=%22%24KO%22%20when%3A7d&hl=en-US&gl=US&ceid=US%3Aen
+    search_url = 'https://news.google.com/search?q="{0}"%20when%3A{1}d&hl=en'.format(ticker, days_back)
     res = requests.get(url = search_url)
     soup = BeautifulSoup(res.content, 'html.parser')
 
