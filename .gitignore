@@ -7,3 +7,4 @@ webserver_key.pem
 notes.txt
 **/.DS_Store
 sentiment*.csv
+keys.yaml
