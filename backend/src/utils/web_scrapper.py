@@ -25,8 +25,8 @@ REDDIT_CLIENT_SECRET = ConfigUtils.REDDIT_CLIENT_SECRET
 
 NEWS_API_KEY = ConfigUtils.NEWSAPI_KEY
 def validTwitterTweet(tweet, ticker) -> bool:
-    
-    matches = re.findall(r'[$][A-Za-z](\_)+[\S]*', tweet)
+            # Must begin with $, any number of alphacharacters
+    matches = re.findall(r'[$][A-Za-z]+[_]*[A-Za-z]*', tweet)
     for i in matches:
         if(i != ticker):
             return False
@@ -135,10 +135,9 @@ def scrape_data_everything_endpoint(ticker:str, days_back:int = 3):
     
     with ThreadPoolExecutor(10) as executor:
         futures = [
-            executor.submit(queryByTickerGoogle, ticker, days_back = 3),
             executor.submit(queryByTickerTwitter, ticker),
-            executor.submit(queryByTickerReddit, ticker,  days_back = 3)
-            
+            executor.submit(queryByTickerReddit, ticker,  days_back = 3),
+            executor.submit(queryByTickerGoogle, ticker, days_back = 3)
         ]            
         for future in as_completed(futures):
                 for x in future.result():
