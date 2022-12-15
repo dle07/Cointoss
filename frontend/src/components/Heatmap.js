@@ -32,13 +32,14 @@ function Heatmap() {
                     promises.push(axios.get(`/ml/time-series?tickerSymbol=${res.data.tickers[i]}`));
                 }
                 Promise.all(promises).then(responses => {
+                    console.log(responses);
                     let tickCounter = 0;
                     for (let j = 0; j < data.length; ++j) {
                         for (let k = 0; k < data[j].length; ++k) {
-                            let difference_in_price = responses[tickCounter].data[4].prediction - price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`];
+                            let difference_in_price = responses[tickCounter].data.pred_price_dict[4].prediction - price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`];
                             setPriceDiffArray(priceDiff => [...priceDiff, difference_in_price]);
                             data[j][k] = res.data.tickers[tickCounter] + '\n' + price.data[0][`('Close', '${res.data.tickers[tickCounter]}')`]?.toFixed(2) + '\n/ Pred: ' 
-                            + responses[tickCounter].data[4].prediction?.toFixed(2);
+                            + responses[tickCounter].data.pred_price_dict[4].prediction?.toFixed(2);
                             ++tickCounter;
                         }
                     }

@@ -88,7 +88,7 @@ export function Tracker(ticker) {
 
    const fetchData = async () => {
        axios.get(`/stock-data?tickerSymbol=${ticker.name}`).then(res => setData(res.data));
-       axios.get(`/ml/time-series?tickerSymbol=${ticker.name}`).then(res => setModelPredictions(res.data));
+       axios.get(`/ml/time-series?tickerSymbol=${ticker.name}`).then(res => setModelPredictions(res.data.pred_price_dict));
     };
     useEffect(()=> {
         fetchData();

@@ -93,13 +93,17 @@ async def sentiment(tickerSymbol, days_back=3):
 
     scrapped_data_json = requests.get(url).json()
     scrapped_data_df = pd.DataFrame(scrapped_data_json)
+    scrapped_data_df.columns = ["text","created_at","source","title"]
 
-    scraped_data_text = scrapped_data_df.dropna(subset=['0'])[0].reset_index(drop = True)
+    scraped_data_fix = scrapped_data_df.dropna(subset=["text"]).reset_index(drop = True)
+
+    scraped_data_text = scraped_data_fix["text"]
+
     tw = tokenizer.texts_to_sequences(scraped_data_text)
     tw = pad_sequences(tw,maxlen=200)
     predictions = sentiment_model.predict(tw)#.round()
 
-   #headlines_sentiment = pd.concat([scraped_data_text, pd.DataFrame(predictions, columns=['sentiment'])], axis = 1)
+    headlines_sentiment = pd.concat([scraped_data_fix, pd.DataFrame(predictions, columns=['sentiment'])], axis = 1)
 
     #This section turns float values from prediction to Positive/Negative. 
     """"
@@ -110,4 +114,4 @@ async def sentiment(tickerSymbol, days_back=3):
     headlines_sentiment['sentiment'] = headlines_sentiment['sentiment'].apply(parse_predictions)
     """
 
-    return predictions #headlines_sentiment.to_dict(orient='records')
+    return headlines_sentiment.to_dict(orient='records')
