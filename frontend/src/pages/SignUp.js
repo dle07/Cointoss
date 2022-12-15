@@ -30,6 +30,7 @@ function SignUp() {
         });
 
         if(!response.ok) {
+          setError("Email already exist");
           throw new Error("Login Failed");
         }
         navigate("/Login");
