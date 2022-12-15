@@ -12,4 +12,4 @@ mlApp.include_router(models.router)
 
 if __name__ == "__main__":
 
-    uvicorn.run(app="ML_Models.main:mlApp", host="0.0.0.0", port=5001, log_level="info", reload=True, workers=2)
+    uvicorn.run(app="ML_Models.main:mlApp", host="0.0.0.0", port=5001, log_level="info", reload=False, workers=2)
