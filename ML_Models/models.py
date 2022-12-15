@@ -10,6 +10,7 @@ from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from cachetools import cached, LRUCache, TTLCache
 from backend.src.utils import web_scrapper
+from datetime import timedelta
 
 router = APIRouter()
 #Load models
@@ -30,7 +31,7 @@ vocab_size = len(tokenizer.word_index) + 1
 encoded_docs = tokenizer.texts_to_sequences(tweet)
 padded_sequence = pad_sequences(encoded_docs, maxlen=200)
 """
-@cached(cache=TTLCache(maxsize=21, ttl=(60)*60))   # ttl is in seconds
+@cached(cache=TTLCache(maxsize=21, ttl=timedelta(hours = 1) ))   # ttl is in seconds
 def compute(tickerSymbol):
     #set sequence length to thee lengththe model was trained with
     sequence_length = 50
@@ -73,7 +74,7 @@ def compute(tickerSymbol):
     ]
 
     return {"ticker":tickerSymbol,"pred_price_dict": pred_price_dict}
-    
+
 @router.get("/ml/time-series")
 async def time_series(tickerSymbol):
     return compute(tickerSymbol)
