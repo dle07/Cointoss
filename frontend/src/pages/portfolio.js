@@ -27,7 +27,7 @@ export default function Portfolio() {
                 "jwt-token": token,
                 "Content-type": "application/json",
             },
-        }).then(retrieveTickers());//window.location.reload());
+        }).then(window.location.reload());
     } catch (err) {
       console.log(err);
     }
@@ -56,7 +56,7 @@ export default function Portfolio() {
 
         Promise.all(promises).then(responses => {
           for(let j = 0; j < ticker.tracked_tickers.length; j++) {
-            let nextDayprediction = responses[j].data[0].prediction;
+              let nextDayprediction = responses[j].data.pred_price_dict[0].prediction;
             setNextDayPred(prediction => [...prediction, nextDayprediction]);
             setLoading(false);
           }
@@ -81,31 +81,18 @@ export default function Portfolio() {
         </div>
       </div>
       <div>
-      <table style={{width: "45%"}}>
-        <thead>
-          <tr>
-            <th scope='col'>Ticker Symbol</th>
-            <th scope='col'>Price</th>
-            <th scope='col'>Prediciton(Next Day)</th>
-            <th scope='col'></th>
-          </tr>
-        </thead>
-        <tbody>
           {tickerList.map((eachTicker, i) => {
             return (
-              <tr key={i}>
-                <td onClick={() => {navigate(`/StockPrice/${eachTicker}`)}}>{eachTicker}</td>
-                {(tickerList.length === 1) ? <td>{tickerPrice[tickerPrice.length - 1]?.Close.toFixed(2)}</td> : 
-                <td>{tickerPrice[`('Close', '${eachTicker}')`]?.toFixed(2)}</td>}
-                {(loading) ? <td>Loading...</td> : 
-                <td>{nextDayPred[i]?.toFixed(2)}</td>}
-                <td onClick={() => {deleteTicker(eachTicker)}} style={{color: 'red'}}><CloseIcon/></td>
-              </tr>
+              <div key={i} className="portfolio_content">
+                <h3 onClick={() => {navigate(`/StockPrice/${eachTicker}`)}}>{eachTicker}</h3>
+                {(tickerList.length === 1) ? <p>Current Price: {tickerPrice[tickerPrice.length - 1]?.Close.toFixed(2)}</p> : 
+                <p>Current Price: {tickerPrice[`('Close', '${eachTicker}')`]?.toFixed(2)}</p>}
+                {(loading) ? <p>Loading...</p> : 
+                <p>Next Days Prediction: {nextDayPred[i]?.toFixed(2)}</p>}
+                <h2 onClick={() => {deleteTicker(eachTicker)}} style={{color: 'red'}}><CloseIcon/></h2>
+              </div>
             );
           })}
-        </tbody>
-      </table>
-        {console.log(tickerList)}
       </div>
     </>
   )

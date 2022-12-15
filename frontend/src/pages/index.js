@@ -1,9 +1,10 @@
-import React from 'react'
-import {SearchBar} from '../components/SearchBar'
-import Heatmap from '../components/Heatmap'
-import './styling.css'
+import React from 'react';
+import {SearchBar} from '../components/SearchBar';
+import Heatmap from '../components/Heatmap';
+import './styling.css';
 import {useCookies} from 'react-cookie';
 import LogOut from '../components/LogOut';
+import AboutUs from './about_us';
 
 function Landing() {
     const [cookies] = useCookies(['jwt']);
@@ -13,7 +14,7 @@ function Landing() {
             <div className="header">
                 <a href='/' className="logo">Cointoss</a>
                 <div className='nav-header'>
-                    <a href='/about_us' className='link'>About&nbsp;Us</a>
+                    <a href='#info' className='link'>How&nbsp;does&nbsp;it&nbsp;work?</a>
                     <a href='/portfolio' className='link'>Your&nbsp;Portfolio</a>
                     <div className='adj-search'>
                         <SearchBar />
@@ -27,6 +28,9 @@ function Landing() {
                 </div>
             </div>
             <Heatmap />
+            <div id='info' className='info'>
+                <AboutUs />
+            </div>
         </>
     );
 }

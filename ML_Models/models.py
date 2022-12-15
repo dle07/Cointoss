@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import pandas_market_calendars as mcal
+import requests
+import json
 from fastapi import APIRouter, Response
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
@@ -81,15 +83,22 @@ async def time_series(tickerSymbol):
 
 @router.get("/ml/sentiment")
 async def sentiment(tickerSymbol, days_back=3):
-    scrapped_data_path = web_scrapper.scrapeData(tickerSymbol, days_back) #need to figure out a way to only call this only once for a certain time period.
-    scraped_data = pd.read_csv(scrapped_data_path)
-    scraped_data_text = scraped_data.dropna(subset=["text"])["text"].reset_index(drop = True)
+
+    url = "http://localhost:5000/scrape_data?ticker="+tickerSymbol
+
+    scrapped_data_json = requests.get(url).json()
+    scrapped_data_df = pd.DataFrame(scrapped_data_json)
+    scrapped_data_df.columns = ["text","created_at","source","title"]
+
+    scraped_data_fix = scrapped_data_df.dropna(subset=["text"]).reset_index(drop = True)
+
+    scraped_data_text = scraped_data_fix["text"]
 
     tw = tokenizer.texts_to_sequences(scraped_data_text)
     tw = pad_sequences(tw,maxlen=200)
     predictions = sentiment_model.predict(tw)#.round()
 
-    headlines_sentiment = pd.concat([scraped_data_text, pd.DataFrame(predictions, columns=['sentiment'])], axis = 1)
+    headlines_sentiment = pd.concat([scraped_data_fix, pd.DataFrame(predictions, columns=['sentiment'])], axis = 1)
 
     #This section turns float values from prediction to Positive/Negative. 
     """"
@@ -99,5 +108,33 @@ async def sentiment(tickerSymbol, days_back=3):
 
     headlines_sentiment['sentiment'] = headlines_sentiment['sentiment'].apply(parse_predictions)
     """
+
+    return headlines_sentiment.to_dict(orient='records')
+
+
+@router.get("/ml/sentiment-news")
+async def sentimentNews(tickerSymbol, days_back=3):
+
+    url = "http://localhost:5000/scrape_data_headlines?ticker="+tickerSymbol
+
+    scrapped_data_json = requests.get(url).json()
+    scrapped_data_df = pd.DataFrame(scrapped_data_json)
+    scrapped_data_df.columns = ["text","created_at","source","title"]
+
+    scraped_data_fix = scrapped_data_df.dropna(subset=["text"]).reset_index(drop = True)
+
+    scraped_data_text = scraped_data_fix["text"]
+
+    tw = tokenizer.texts_to_sequences(scraped_data_text)
+    tw = pad_sequences(tw,maxlen=200)
+    predictions = sentiment_model.predict(tw).round()
+
+    headlines_sentiment = pd.concat([scraped_data_fix, pd.DataFrame(predictions, columns=['sentiment'])], axis = 1)
+
+    def parse_predictions(prediction):
+        sentiment = sentiment_label[1][prediction]
+        return sentiment
+
+    headlines_sentiment['sentiment'] = headlines_sentiment['sentiment'].apply(parse_predictions)
 
     return headlines_sentiment.to_dict(orient='records')
