@@ -82,7 +82,7 @@ def queryByTickerReddit(ticker:str, limit = 1000,   days_back = 3,):
 def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
     rows = []
     links = set()  #https://news.google.com/search?q=%22%24KO%22%20when%3A7d&hl=en-US&gl=US&ceid=US%3Aen
-    search_url = 'https://news.google.com/search?q="{0}"%20when%3A{1}d&hl=en'.format(ticker, days_back)
+    search_url = "https://news.google.com/search?q=\"{0}\"%20when%3A{1}d&hl=en".format(ticker, days_back)
     res = requests.get(url = search_url)
     soup = BeautifulSoup(res.content, 'html.parser')
 
@@ -90,6 +90,7 @@ def queryByTickerGoogle(ticker:str, days_back:int = 3, limit = 100):
         href = a['href']
         if( href.startswith("./articles") ):
             links.add("http://news.google.com" + href[1:])
+    
 
     with ThreadPoolExecutor(max_workers=100) as executor:
         executor.map(scrape_news_article, links, repeat(rows))   
@@ -107,6 +108,7 @@ def scrape_news_article(url,rows):
         print("EXITING")
         return []
 
+ 
 
 
 
